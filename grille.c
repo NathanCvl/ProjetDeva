@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/* Nathan */
 
 void initaliser_grille(int tab[TGRILLE][TGRILLE]){
     int i,j;
@@ -33,4 +34,7 @@ int main(int argc, char const *argv[])
     initaliser_grille(tab);
     afficher_grille(tab);
     return 0;
+}
+void initialiser_grille(int *tab){
+    
 }
