@@ -24,6 +24,7 @@ void afficher_grille(int tab[TGRILLE][TGRILLE]){
         for (j = 0; j < TGRILLE; j++)
         {
             printf("%d\t \t",tab[i][j]);
+            printf("13432")
         }
         printf("\n");
     }
