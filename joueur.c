@@ -5,14 +5,22 @@
 /* Ryan */
 
 typedef struct {
-    char *pseudo; 
+    char pseudo[40]; 
 } joueur; 
 
-void pseudo() {
-    char pseudo[10]; 
+joueur pseudo() {
+    joueur j;
     printf("Quel est votre pseudo ?\n"); 
-    scanf("%s", pseudo); 
-    printf ("Vous jouez sous le pseudo de : %s ! \n \n ", pseudo); 
+    scanf("%s", j.pseudo); 
+    return j;
+}
+int main(int argc, char const *argv[])
+{
+    joueur j;
+    
+    j=pseudo();
+    printf("%s",j.pseudo);
+    return 0;
 }
 
 
