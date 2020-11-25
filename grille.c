@@ -1,5 +1,5 @@
 #include "grille.h"
 
-void initaliser_grille(int *tab){
+void initialiser_grille(int *tab){
     
 }
