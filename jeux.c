@@ -64,7 +64,7 @@ Coordonnees caracToCdn(char cdn[]){
         buffer[i]=cdn[i+1];
     }
     buffer[i+1]='\0';
-//atoi convertie des caractere alphanumérique en int mais comme le tableau commence en 0 on enleve 1 au résultat
+//atoi() convertie des caractere alphanumérique en int mais comme le tableau commence en 0 on enleve 1 au résultat
     coord.x=atoi(buffer)-1;
 
 
@@ -72,14 +72,37 @@ Coordonnees caracToCdn(char cdn[]){
 
 }
 
-
+void afficherGrille(int g[TGRILLE][TGRILLE])
+{
+    int i, j;
+    printf("\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|");
+    printf(LIGNE);
+    for (i = 0; i < TGRILLE; i++)
+    {
+        printf("%c |", i + 'A');
+        for (j = 0; j < TGRILLE; j++)
+        {
+            if (g[i][j] == eau){
+    
+             printf("%s", EAU);
+            }
+            else if (g[i][j] == eau_touche){
+                printf("%s", EAU_T);
+            }
+   
+        }
+        printf("\n");
+        printf(LIGNE);
+    }
+}
 
 int main(int argc, char const *argv[])
 {
     char test[10] = "J10v";
     Coordonnees c;
     Grille p;
-    c=caracToCdn(test);
-    printf("x : %d y : %d , placement %c",c.x,c.y,c.placement);
+    p=initaliser_grille(p);
+    afficherGrille(p.grille1);
+
     return 0;
 }
