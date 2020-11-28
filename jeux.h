@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+// constante grille
 #define eau 0
 #define eau_touche 1
 #define Bat_porte_avion 5
@@ -13,6 +14,8 @@
 #define Bat_torpilleur 2
 #define Bateau 10
 #define Bateau_touche 11
+
+// couleur 
 #define RED "\x1b[31m"
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
@@ -20,7 +23,7 @@
 #define MAGENTA "\x1b[35m"
 #define CYAN "\x1b[36m"
 #define RESET "\x1b[0m"
-
+//affichage grille
 const char LIGNE[] = "  +---+---+---+---+---+---+---+---+---+---+",
 		   EAU[] = "   |",
 		   EAU_T[] = BLUE "X" RESET "|",
