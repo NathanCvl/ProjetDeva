@@ -48,11 +48,13 @@ ici la démarche et de pouvoir convertire le type string en type coordonnées
 
 Coordonnees CaracToCdn(char cdn[]){
     Coordonnees coord;
+    char buffer[4];
 // la direction devra être rentré en dernier on la récuper en récuperant la dernier case du tableau cdn
     coord.placement=cdn[strlen(cdn)-1];
 // comme on demande d'abord la coordonnée y on récupere y en premier
 // ici avec le code ASCII on convertie le caractère donc si coord.y = A on fais 'A'-'A'= 0 
     coord.y=cdn[0]-'A';
+
 
 
 
