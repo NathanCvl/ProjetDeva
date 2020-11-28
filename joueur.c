@@ -14,13 +14,5 @@ joueur pseudo() {
     scanf("%s", j.pseudo); 
     return j;
 }
-int main(int argc, char const *argv[])
-{
-    joueur j;
-    
-    j=pseudo();
-    printf("%s",j.pseudo);
-    return 0;
-}
 
 

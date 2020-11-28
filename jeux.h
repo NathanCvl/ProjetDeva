@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 // constante grille
 #define eau 0
 #define eau_touche 1
@@ -24,18 +25,13 @@
 #define CYAN "\x1b[36m"
 #define RESET "\x1b[0m"
 //affichage grille
-const char LIGNE[] = "  +---+---+---+---+---+---+---+---+---+---+",
+const char LIGNE[] = "--+---+---+---+---+---+---+---+---+---+---+",
 		   EAU[] = "   |",
 		   EAU_T[] = BLUE "X" RESET "|",
 		   BAT[] = GREEN "O" RESET "|",
 		   BAT_T[] = RED "O" RESET "|";
 
-/* définiton d'une structure coordonnees pour pour stocker la direction et les coordonnées dans une seul variable*/
-typedef struct
-{
-	int x, y;
-	char placement; /* pour définir la direction du bateau sur la grille */
-} Coordonnees;
+
 /*
 definition de la grille avec le nom des bateau et leurs type et la définiton de deux matrice qui 
 represente la grille du joueur 1 et 2 ou du joueur 1 contre l'IA
@@ -43,9 +39,8 @@ represente la grille du joueur 1 et 2 ou du joueur 1 contre l'IA
 typedef struct 
 {
 	int porte_avion, croiseur, contre_torpilleur, sous_marin, torpilleur;
-	int grille1[TGRILLE][TGRILLE];
-	int grille2[TGRILLE][TGRILLE];
-}Grille;
+	int grille[TGRILLE][TGRILLE];
+}Grille_j;
 
 
 #endif

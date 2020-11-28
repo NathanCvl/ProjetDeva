@@ -1,108 +1,107 @@
+#include "coordonnees.h"
 #include "jeux.h"
-/*TODO: placer  bateau avec orientation 
-* afficher grille avec coordonnées
-* placer bateau énémie par joueur ou IA
-* attaque joueur et/ou IA
-*/
 
-/* 
-*initialise la grille avec de l'eau partout donc une valeur égale à 0.
-*/
-Grille initaliser_grille(Grille h)
+//TODO: placer  bateau avec orientation 
+//afficher grille avec coordonnées
+// placer bateau énémie par joueur ou IA
+//attaque joueur et/ou IA
+// gerer le JcJ et JcIA 
+
+
+
+//initialise la grille avec de l'eau partout donc une valeur égale à 0.Retourne type Grille
+Grille_j initaliser_grille(Grille_j h)
 {
     int i, j;
     for (i = 0; i < TGRILLE; i++)
     {
         for (j = 0; j < TGRILLE; j++)
         {
-            h.grille1[i][j]=eau;
-            h.grille2[i][j]=eau;
+            h.grille[i][j]=eau;
+            
         }
     }
     return h;
 }
 
-/*  
-    
-    ↑(y)
-    |
-    |
-    |
-    ------>(x)
-     | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 
-    A|
-    B|
-    C|
-    D|
-    E|
-    F|
-    G|
-    H|
-    I|
-    J|
-ici on veut recuper un type coordonnées donnant pour pour coordonnées par exemple A10 et Vertical
-ici la démarche et de pouvoir convertire le type string en type coordonnées
+
+//fonction pour placer les bateaux en fonction de leurs coordonnées et de leurs direction
 
 
-*/
 
-Coordonnees caracToCdn(char cdn[]){
-    Coordonnees coord;
-    int i;
-    char buffer[4];
-// la direction devra être rentré en dernier on la récuper en récuperant la dernier case du tableau cdn
-    coord.placement=cdn[strlen(cdn)-1];
-// comme on demande d'abord la coordonnée y on récupere y en premier
-// ici avec le code ASCII on convertie le caractère donc si coord.y = A on fais 'A'-'A'= 0 
-    coord.y=cdn[0]-'A';
-
-// ici on veut convertir deux caractere en nombre que le caractere '10' devienne le nombre 10
-// pour pouvoir convertir les deux caractere on dois l'envoyer dans un autre tableau sans le premier et dernier caractere
-// copie cdn vers buffer pour isolé la coordonnée x.
-    for ( i = 0; i < strlen(cdn)-2; i++)
-    {
-        buffer[i]=cdn[i+1];
-    }
-    buffer[i+1]='\0';
-//atoi() convertie des caractere alphanumérique en int mais comme le tableau commence en 0 on enleve 1 au résultat
-    coord.x=atoi(buffer)-1;
-
-
-    return coord;
-
-}
-
-void afficherGrille(int g[TGRILLE][TGRILLE])
+//on affiche la grille avec differente couleur pour chaque situation : eau , eau déja touché par un tir, un bateau ou alors un batteau touché 
+void afficherGrille(int grille[TGRILLE][TGRILLE])
 {
     int i, j;
-    printf("\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|");
-    printf(LIGNE);
+
+
+    printf("\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n");
+    printf("%s\n",LIGNE);
     for (i = 0; i < TGRILLE; i++)
     {
-        printf("%c |", i + 'A');
+        printf("%c |", 'A'+i);
         for (j = 0; j < TGRILLE; j++)
         {
-            if (g[i][j] == eau){
-    
+            if (grille[i][j] == eau){
              printf("%s", EAU);
             }
-            else if (g[i][j] == eau_touche){
-                printf("%s", EAU_T);
+            else if (grille[i][j] == eau_touche){
+                printf("%s",EAU_T);
             }
    
         }
         printf("\n");
-        printf(LIGNE);
+        printf("%s\n", LIGNE);
     }
 }
-
+Grille_j placerBateau(Grille_j g,char bateau[],int tailleBateau)
+{   bool fini = false;
+    int i;
+    //chaine de caractere pour récuperer les coordonnées du bateau;
+    char coordonnee[4];
+    afficherGrille(g.grille);
+    Coordonnees c_bateau; 
+    while (fini==true)
+    {
+        printf("Position du bateau : ");
+        scanf("%s",coordonnee);
+        c_bateau = caracToCdn(coordonnee);
+        // on test ici c'est les coordonnes rentré son comprise entre 0 et 9 ;
+        if (c_bateau.x < 0 || c_bateau.y<0 || c_bateau.x > TGRILLE || c_bateau.y > TGRILLE)
+        {
+            printf("Mauvaise coordonnées veuillez réassayer");
+        }//on test ici quand on met le bateau a l'horizontal la taille du bateau ne dépasse pas la grille
+        else if (c_bateau.placement == 'H')
+        {
+            if (c_bateau.x+tailleBateau >TGRILLE)
+            {
+                printf("Limite de la grille dépasser");
+            }else
+            //on verifie si un bateau n'a pas été placer
+            {
+                for ( i = c_bateau.x; i < tailleBateau; i++)
+                {
+                    /* code */
+                }
+                
+            }
+            
+            
+        }
+        
+        
+        
+    }
+    
+    return g;
+}
 int main(int argc, char const *argv[])
 {
-    char test[10] = "J10v";
+    char test[10] = "B9V";
     Coordonnees c;
-    Grille p;
+    Grille_j p;
     p=initaliser_grille(p);
-    afficherGrille(p.grille1);
-
+    c=caracToCdn(test);
+    printf("x:%d y:%d",c.x,c.y);
     return 0;
 }
