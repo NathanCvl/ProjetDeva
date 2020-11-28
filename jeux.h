@@ -27,10 +27,9 @@
 //affichage grille
 const char LIGNE[] = "--+---+---+---+---+---+---+---+---+---+---+",
 		   EAU[] = "   |",
-		   EAU_T[] = BLUE "X" RESET "|",
-		   BAT[] = GREEN "O" RESET "|",
-		   BAT_T[] = RED "O" RESET "|";
-
+		   EAU_T[] = BLUE " X " RESET "|",
+		   BAT[] = GREEN " ▓" RESET " |",
+		   BAT_T[] = RED " ▓" RESET "|";
 
 /*
 definition de la grille avec le nom des bateau et leurs type et la définiton de deux matrice qui 
