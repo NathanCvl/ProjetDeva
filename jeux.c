@@ -46,8 +46,9 @@ ici la démarche et de pouvoir convertire le type string en type coordonnées
 
 */
 
-Coordonnees CaracToCdn(char cdn[]){
+Coordonnees caracToCdn(char cdn[]){
     Coordonnees coord;
+    int i;
     char buffer[4];
 // la direction devra être rentré en dernier on la récuper en récuperant la dernier case du tableau cdn
     coord.placement=cdn[strlen(cdn)-1];
@@ -55,7 +56,16 @@ Coordonnees CaracToCdn(char cdn[]){
 // ici avec le code ASCII on convertie le caractère donc si coord.y = A on fais 'A'-'A'= 0 
     coord.y=cdn[0]-'A';
 
-
+// ici on veut convertir deux caractere en nombre que le caractere '10' devienne le nombre 10
+// pour pouvoir convertir les deux caractere on dois l'envoyer dans un autre tableau sans le premier et dernier caractere
+// copie cdn vers buffer pour isolé la coordonnée x.
+    for ( i = 0; i < strlen(cdn)-2; i++)
+    {
+        buffer[i]=cdn[i+1];
+    }
+    buffer[i+1]='\0';
+//atoi convertie des caractere alphanumérique en int mais comme le tableau commence en 0 on enleve 1 au résultat
+    coord.x=atoi(buffer)-1;
 
 
     return coord;
@@ -65,11 +75,11 @@ Coordonnees CaracToCdn(char cdn[]){
 
 
 int main(int argc, char const *argv[])
-{  
-    char string[10];
+{
+    char test[10] = "J10v";
     Coordonnees c;
     Grille p;
-    p=initaliser_grille(p);
-
+    c=caracToCdn(test);
+    printf("x : %d y : %d , placement %c",c.x,c.y,c.placement);
     return 0;
 }
