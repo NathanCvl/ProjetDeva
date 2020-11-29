@@ -30,7 +30,7 @@ Coordonnees caracToCdn(char cdn[])
     }
     //atoi() convertie des caractere alphanumérique en int mais comme le tableau commence en 0 on enleve 1 au résultat
     //obli
-    coord.x = atoi(buffer);
+    coord.x = atoi(buffer)-1;
 
 
     // comme on demande d'abord la coordonnée y on récupere en début du tableau
