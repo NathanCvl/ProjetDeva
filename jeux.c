@@ -1,6 +1,6 @@
-#include "jeux.h"
 #include "coordonnees.h"
-#include "bateau.h"
+#include "jeux.h"
+
 
 //TODO: placer  bateau avec orientation :ok
 //afficher grille avec coordonnées : ok 
@@ -26,6 +26,27 @@ Grille_j initaliser_grille(Grille_j h)
     return h;
 }
 
+void iniBateau(Grille_j *j)
+{
+    j->contre_torpilleur.idBateau = ID_contre_torpilleur;
+    j->porteAvion.idBateau = ID_porteAvion;
+    j->sous_marin.idBateau = ID_sous_marin;
+    j->torpilleur.idBateau = ID_torpilleur;
+    j->croiseur.idBateau = ID_croiseur;
+
+    j->porteAvion.vieBateau = t_porte_avion;
+    j->sous_marin.vieBateau = t_sous_marin;
+    j->torpilleur.vieBateau = t_torpilleur;
+    j->croiseur.vieBateau = t_croiseur;
+    j->contre_torpilleur.vieBateau = t_contre_torpilleur;
+
+    j->porteAvion.nom= "porte_avion";
+    j->sous_marin.nom = "sous marin";
+    j->torpilleur.nom = "torpilleur";
+    j->croiseur.nom = "croiseur";
+    j->contre_torpilleur.nom = "contre torpilleur";
+    
+}
 
 //on affiche la grille avec differente couleur pour chaque situation : eau , eau déja touché par un tir, un bateau ou alors un batteau touché 
 void afficherGrille(int grille[TGRILLE][TGRILLE])
@@ -194,6 +215,18 @@ void tire (Grille_j *joueur1,Grille_j *joueur2){
 
     }
     
+    
+}
+void etatBateau(Bateau t)
+{
+    if (t.vieBateau >= 1)
+    {
+        printf("le bateau %s lui reste : %d point de vie ! ", t.nom, t.vieBateau);
+    }
+    else
+    {
+        printf("le bateau %s viens d'étre coulé...", t.nom);
+    }
 }
 
 int main(int argc, char const *argv[])
@@ -201,8 +234,14 @@ int main(int argc, char const *argv[])
     char test[10] = "B9V";
     Coordonnees c;
     Grille_j p;
+    p=initaliser_grille(p);
+    iniBateau(&p);
+    p=placerBateau(p,p.contre_torpilleur);
+    afficherGrille(p.grille);
+    printf("%s",LIGNE);
+    afficherGrille(p.grille);
 
-
+    
 
     return 0;
 }
