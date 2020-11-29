@@ -1,5 +1,5 @@
 #include "coordonnees.h"
-#include "jeux.h"
+#include "grille.h"
 
 
 //TODO: placer  bateau avec orientation :ok
@@ -105,7 +105,7 @@ Grille_j placerBateau(Grille_j g, Bateau b)
         }//on test ici quand on met le bateau a l'horizontal la taille du bateau ne dépasse pas la grille
         else if (c_bateau.placement == 'V')
         {
-            if (c_bateau.y+b.vieBateau >TGRILLE)
+            if (c_bateau.x+b.vieBateau >TGRILLE)
             {
                 printf("Limite de la grille dépasser\n");
                 c_valide = false;
@@ -123,7 +123,7 @@ Grille_j placerBateau(Grille_j g, Bateau b)
                 }
             }
         }
-        else if (c_bateau.x+b.vieBateau > TGRILLE){
+        else if (c_bateau.y+b.vieBateau > TGRILLE){
             printf("Limite de la grille dépasser\n");
             c_valide = false;
          }
@@ -132,7 +132,7 @@ Grille_j placerBateau(Grille_j g, Bateau b)
         {
             for (i = c_bateau.x; i < c_bateau.x+b.vieBateau; i++)
             {
-                if (g.grille[c_bateau.y][i] != eau)
+                if (g.grille[c_bateau.x][i] != eau)
                 {
                     printf("Il y'a déja un bateau ici\n");
                     c_valide = false;
@@ -149,30 +149,28 @@ Grille_j placerBateau(Grille_j g, Bateau b)
     //on place le bateau sur la grille grace au coordonnées
     if (c_bateau.placement == 'V')
     {
-        for (i = c_bateau.y; i < c_bateau.y + b.vieBateau; i++)
+        for (i = c_bateau.x; i < c_bateau.x + b.vieBateau; i++)
         {
-            g.grille[i][c_bateau.x] = b.idBateau;
+            g.grille[i][c_bateau.y] = b.idBateau;
         }
 
     }
     else
     {
-        for (i = c_bateau.x; i < c_bateau.x+ b.vieBateau; i++)
+        for (i = c_bateau.y; i < c_bateau.y+ b.vieBateau; i++)
         {
-            g.grille[c_bateau.y][i] = b.idBateau;
+            g.grille[c_bateau.x][i] = b.idBateau;
         }
-    }
-    printf("x : %d , y : %d ", c_bateau.x,c_bateau.y);
-    
+    }    
     return g;
 }
 //ici on crée la fonction tire qui va tiré sur la grille énnemie le but étant de montré sUR la grille si un bateau a été touché,
 //sans afficher la grille énemie au joueur qui tire 
-void tire (Grille_j *joueur1,Grille_j *joueur2){
+int attaque(Grille_j *joueur1,Grille_j *joueur2){
+    int touche = 0;
     Coordonnees tire;
     int idcase;
     char c_tire[4];
-    afficherGrille(joueur1->grilleTire);
     printf("Sur quel case voulez vous tiré ?");
     scanf("%s",c_tire);
     tire = caracToCdn(c_tire);
@@ -180,7 +178,7 @@ void tire (Grille_j *joueur1,Grille_j *joueur2){
     if (idcase == bat_toucher)
     {
         printf("Vous avez déja attaquer cette case ! \n ");
-        printf("Sur quel case voulez vous tiré ?");
+        printf("Sur quel case voulez vous tiré ?\n");
         scanf("%s", c_tire);
     }
     else if (idcase== eau)
@@ -190,7 +188,10 @@ void tire (Grille_j *joueur1,Grille_j *joueur2){
     }
     else
     {
+        touche=1;
+        printf("Vous avez toucher un bateau !\n");
         joueur1->grilleTire[tire.x][tire.y] = bat_toucher;
+        joueur2->grille[tire.x][tire.y]=bat_toucher;
         switch (idcase)
         {
         case ID_porteAvion:
@@ -214,7 +215,7 @@ void tire (Grille_j *joueur1,Grille_j *joueur2){
     }
 
     }
-    
+    return touche;
     
 }
 void etatBateau(Bateau t)
@@ -233,15 +234,16 @@ int main(int argc, char const *argv[])
 {
     char test[10] = "B9V";
     Coordonnees c;
-    Grille_j p;
+    Grille_j p,j2;
     p=initaliser_grille(p);
+    j2=initaliser_grille(j2);
+    iniBateau(&j2);
     iniBateau(&p);
-    p=placerBateau(p,p.contre_torpilleur);
-    afficherGrille(p.grille);
-    printf("%s",LIGNE);
-    afficherGrille(p.grille);
-
-    
-
+    j2= placerBateau(j2, j2.porteAvion);
+    afficherGrille(j2.grille);
+    printf("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\n");
+    attaque(&p,&j2);
+    etatBateau(j2.porteAvion);
+    afficherGrille(j2.grille);
     return 0;
 }

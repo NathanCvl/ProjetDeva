@@ -34,11 +34,11 @@
 #define CYAN "\x1b[36m"
 #define RESET "\x1b[0m"
 //affichage grille
-char LIGNE[] = "--+---+---+---+---+---+---+---+---+---+---+",
-		   EAU[] = "   |",
-		   EAU_T[] = BLUE " X " RESET "|",
+char LIGNE[] = RED "--+---+---+---+---+---+---+---+---+---+---+" RESET,
+		   EAU[] = BLUE " X " RESET "|",
+		   EAU_T[] = YELLOW " X " RESET "|",
 		   BAT[] = GREEN " ▓" RESET " |",
-		   BAT_T[] = RED " ▓" RESET "|";
+		   BAT_T[] = RED " ▓" RESET " |";
 
 /*
 definition de la grille avec le nom des bateau et leurs type et la définiton de deux matrice qui 
