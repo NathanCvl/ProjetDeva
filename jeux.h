@@ -9,6 +9,7 @@
 // constante grille
 #define eau 0
 #define eau_touche 1
+
 // couleur 
 #define RED "\x1b[31m"
 #define GREEN "\x1b[32m"

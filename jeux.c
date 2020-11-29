@@ -149,35 +149,60 @@ Grille_j placerBateau(Grille_j g, Bateau b)
 //sans afficher la grille énemie au joueur qui tire 
 void tire (Grille_j *joueur1,Grille_j *joueur2){
     Coordonnees tire;
+    int idcase;
     char c_tire[4];
     afficherGrille(joueur1->grilleTire);
     printf("Sur quel case voulez vous tiré ?");
     scanf("%s",c_tire);
     tire = caracToCdn(c_tire);
-    if (joueur2->grille[tire.x][tire.y]==eau)
+    idcase = joueur2->grille[tire.x][tire.y];
+    if (idcase == bat_toucher)
     {
+        printf("Vous avez déja attaquer cette case ! \n ");
+        printf("Sur quel case voulez vous tiré ?");
+        scanf("%s", c_tire);
+    }
+    else if (idcase== eau)
+    {   printf("tire raté\n");
         joueur1->grilleTire[tire.x][tire.y]=eau_touche;
         joueur2->grille[tire.x][tire.y]=eau_touche;
     }
-    else if (joueur2->grille[tire.x][tire.y]==Bateau)
+    else
     {
-        joueur1->grilleTire[tire.x][tire.y]=Bateau_touche;
-        joueur2->grille[tire.x][tire.y] = Bateau_touche;
+        joueur1->grilleTire[tire.x][tire.y] = bat_toucher;
+        switch (idcase)
+        {
+        case ID_porteAvion:
+            joueur2->porteAvion.vieBateau--;
+            break;
+        case ID_contre_torpilleur:
+            joueur2->contre_torpilleur.vieBateau--;
+            break;
+        case ID_croiseur:
+            joueur2->croiseur.vieBateau--;
+            break;
+        case ID_sous_marin:
+            joueur2->sous_marin.vieBateau--;
+            break;
+        case ID_torpilleur: 
+            joueur2->torpilleur.vieBateau--;
+
+        default: 
+            printf("Erreur...(id inconnue)\n");
+            break;
     }
 
+    }
     
 }
-//on doit définir des points de vie pour les bateaux pour définir leurs états dans la partie quand la vie du bateau est à 0 le bateau est coulé 
-//on devra donc définir un code pour chaque bateau pour pouvoir récupéré sur quel bateau on tire 
+
 int main(int argc, char const *argv[])
 {
     char test[10] = "B9V";
     Coordonnees c;
     Grille_j p;
-    p=initaliser_grille(p);
-    c=caracToCdn(test);
-    p=placerBateau(p,"test",4);
-    p = placerBateau(p, "truc", 5);
-    afficherGrille(p.grille);
+
+
+
     return 0;
 }

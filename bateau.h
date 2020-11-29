@@ -15,11 +15,15 @@
 #define ID_contre_torpilleur 502
 #define ID_sous_marin 503
 #define ID_torpilleur 504
+#define bat_toucher 505
 //definition d'un type bateau avec leurs ID et leurs points de vie
+//on doit définir des points de vie pour les bateaux pour définir leurs états dans la partie quand la vie du bateau est à 0 le bateau est coulé
+//on devra donc définir un code pour chaque bateau pour pouvoir récupéré sur quel bateau on tire
 typedef struct
-{
-    int vieBateau;
+{   int vieBateau;
     int idBateau;
+    char nom[];
 }Bateau;
+
 void iniBateau(Grille_j *j);
 #endif
