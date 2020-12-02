@@ -9,6 +9,6 @@ typedef struct{
     int x, y;
     char placement; /* pour définir la direction du bateau sur la grille */
 } Coordonnees;
-Coordonnees caracToCdn(char cdn[]);
+Coordonnees *caracToCdn(char cdn[]);
 
 #endif

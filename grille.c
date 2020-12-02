@@ -11,22 +11,24 @@
 
 
 //initialise la grille avec de l'eau partout donc une valeur égale à 0.Retourne type Grille
-Grille_j initaliser_grille(Grille_j h)
+void initaliser_grille(Grille_j *j1, Grille_j *j2)
 {
+    j1->vie=5;
+    j2->vie=5;
     int i, j;
     for (i = 0; i < TGRILLE; i++)
     {
         for (j = 0; j < TGRILLE; j++)
         {
-            h.grille[i][j]=eau;
-            h.grilleTire[i][j]=eau;
-            
+            j1->grille[i][j]=eau;
+            j1->grilleTire[i][j]=eau;
+            j2->grille[i][j] = eau;
+            j2->grilleTire[i][j] = eau;
         }
     }
-    return h;
 }
 
-void iniBateau(Grille_j *j)
+void iniBateau(Grille_j *j, Grille_j *h)
 {
     j->contre_torpilleur.idBateau = ID_contre_torpilleur;
     j->porteAvion.idBateau = ID_porteAvion;
@@ -45,9 +47,26 @@ void iniBateau(Grille_j *j)
     j->torpilleur.nom = "torpilleur";
     j->croiseur.nom = "croiseur";
     j->contre_torpilleur.nom = "contre torpilleur";
+
+        h->contre_torpilleur.idBateau = ID_contre_torpilleur;
+        h->porteAvion.idBateau = ID_porteAvion;
+        h->sous_marin.idBateau = ID_sous_marin;
+        h->torpilleur.idBateau = ID_torpilleur;
+        h->croiseur.idBateau = ID_croiseur;
+
+        h->porteAvion.vieBateau = t_porte_avion;
+        h->sous_marin.vieBateau = t_sous_marin;
+        h->torpilleur.vieBateau = t_torpilleur;
+        h->croiseur.vieBateau = t_croiseur;
+        h->contre_torpilleur.vieBateau = t_contre_torpilleur;
+
+        h->porteAvion.nom = "porte_avion";
+        h->sous_marin.nom = "sous marin";
+        h->torpilleur.nom = "torpilleur";
+        h->croiseur.nom = "croiseur";
+        h->contre_torpilleur.nom = "contre torpilleur";
     
 }
-
 //on affiche la grille avec differente couleur pour chaque situation : eau , eau déja touché par un tir, un bateau ou alors un batteau touché 
 void afficherGrille(int grille[TGRILLE][TGRILLE])
 {
@@ -55,66 +74,67 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
 
 
     printf("\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n");
-    printf("%s\n",LIGNE);
+    printf(RED "--+---+---+---+---+---+---+---+---+---+---+" RESET);
     for (i = 0; i < TGRILLE; i++)
     {
-        printf("%c |", 'A'+i);
+        printf(RED "\n%c |" RESET, 'A'+i);
         for (j = 0; j < TGRILLE; j++)
         {
             if (grille[i][j] == eau){
-             printf("%s", EAU);
+                printf("%s", BLUE " X " RESET "|");
             }
             else if (grille[i][j] == eau_touche){
-                printf("%s",EAU_T);
+                printf("%s", YELLOW " X " RESET "|");
             }
             else if (grille[i][j] == ID_contre_torpilleur || grille[i][j] == ID_croiseur || grille[i][j] == ID_porteAvion || grille[i][j] == ID_sous_marin || grille[i][j] == ID_torpilleur)
             {
-                printf("%s", BAT);
+                printf("%s", GREEN " B" RESET" |");
             }else
             {
-                printf("%s",BAT_T);
+                printf("%s", RED " B" RESET " |");
             }
             
         }
         printf("\n");
-        printf("%s\n", LIGNE);
+        printf(RED "--+---+---+---+---+---+---+---+---+---+---+" RESET);
     }
 }
 //fonction pour placer les bateaux en fonction de leurs coordonnées et de leurs direction
 //vie bateau est égal aussi a la taille du bateau en début de partie
-Grille_j placerBateau(Grille_j g, Bateau b)
+Grille_j *placerBateau(Grille_j *g, Bateau *b)
 {
     system("clear");
     bool fini = false;
     int i;
     //chaine de caractere pour récuperer les coordonnées du bateau;
     char coordonnee[4];
-    afficherGrille(g.grille);
-    Coordonnees c_bateau; 
-    while (fini==false)
+    afficherGrille(g->grille);
+    Coordonnees *c_bateau = NULL;
+    c_bateau = (Coordonnees *)malloc(sizeof(Coordonnees));
+    while (fini == false)
     {
         bool c_valide = true;
         printf("Position du bateau : ");
         scanf("%s",coordonnee);
         c_bateau = caracToCdn(coordonnee);
         // on test ici c'est les coordonnes rentré son comprise entre 0 et 9 ;
-        if (c_bateau.x < 0 || c_bateau.y<0 || c_bateau.x > TGRILLE || c_bateau.y > TGRILLE)
+        if (c_bateau->x < 0 || c_bateau->y<0 || c_bateau->x > TGRILLE || c_bateau->y > TGRILLE)
         {
             printf("Mauvaise coordonnées veuillez réassayer\n");
             c_valide=false;
         }//on test ici quand on met le bateau a l'horizontal la taille du bateau ne dépasse pas la grille
-        else if (c_bateau.placement == 'V')
+        else if (c_bateau->placement == 'V')
         {
-            if (c_bateau.x+b.vieBateau >TGRILLE)
+            if (c_bateau->x+b->vieBateau >TGRILLE)
             {
                 printf("Limite de la grille dépasser\n");
                 c_valide = false;
             }else
             //on verifie si un bateau n'a pas été placer avant
             {
-                for ( i = c_bateau.y; i < b.vieBateau+c_bateau.y; i++)
+                for ( i = c_bateau->x; i < b->vieBateau+c_bateau->x; i++)
                 {
-                    if (g.grille[i][c_bateau.x]!=eau)
+                    if (g->grille[i][c_bateau->y]!=eau)
                     {
                         printf("Il y'a déja un bateau ici\n");
                         c_valide =false;
@@ -123,16 +143,16 @@ Grille_j placerBateau(Grille_j g, Bateau b)
                 }
             }
         }
-        else if (c_bateau.y+b.vieBateau > TGRILLE){
+        else if (c_bateau->y+b->vieBateau > TGRILLE){
             printf("Limite de la grille dépasser\n");
             c_valide = false;
          }
         else
         //on verifie si un bateau n'a pas été placer avant
         {
-            for (i = c_bateau.x; i < c_bateau.x+b.vieBateau; i++)
+            for (i = c_bateau->x; i < c_bateau->x+b->vieBateau; i++)
             {
-                if (g.grille[c_bateau.x][i] != eau)
+                if (g->grille[c_bateau->y][i] != eau)
                 {
                     printf("Il y'a déja un bateau ici\n");
                     c_valide = false;
@@ -147,34 +167,38 @@ Grille_j placerBateau(Grille_j g, Bateau b)
         
     }
     //on place le bateau sur la grille grace au coordonnées
-    if (c_bateau.placement == 'V')
+    if (c_bateau->placement == 'V')
     {
-        for (i = c_bateau.x; i < c_bateau.x + b.vieBateau; i++)
+        for (i = c_bateau->x; i < c_bateau->x + b->vieBateau; i++)
         {
-            g.grille[i][c_bateau.y] = b.idBateau;
+            g->grille[i][c_bateau->y] = b->idBateau;
         }
 
     }
     else
     {
-        for (i = c_bateau.y; i < c_bateau.y+ b.vieBateau; i++)
+        for (i = c_bateau->y; i < c_bateau->y+ b->vieBateau; i++)
         {
-            g.grille[c_bateau.x][i] = b.idBateau;
+            g->grille[c_bateau->x][i] = b->idBateau;
         }
-    }    
+    }
+    afficherGrille(g->grille);
+
     return g;
 }
 //ici on crée la fonction tire qui va tiré sur la grille énnemie le but étant de montré sUR la grille si un bateau a été touché,
 //sans afficher la grille énemie au joueur qui tire 
+// si retourne 1 le joueur retire 
 int attaque(Grille_j *joueur1,Grille_j *joueur2){
     int touche = 0;
-    Coordonnees tire;
+    Coordonnees *tire = NULL;
+    tire = (Coordonnees *)malloc(sizeof(Coordonnees));
     int idcase;
     char c_tire[4];
     printf("Sur quel case voulez vous tiré ?");
     scanf("%s",c_tire);
     tire = caracToCdn(c_tire);
-    idcase = joueur2->grille[tire.x][tire.y];
+    idcase = joueur2->grille[tire->x][tire->y];
     if (idcase == bat_toucher)
     {
         printf("Vous avez déja attaquer cette case ! \n ");
@@ -183,15 +207,15 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2){
     }
     else if (idcase== eau)
     {   printf("tire raté\n");
-        joueur1->grilleTire[tire.x][tire.y]=eau_touche;
-        joueur2->grille[tire.x][tire.y]=eau_touche;
+        joueur1->grilleTire[tire->x][tire->y]=eau_touche;
+        joueur2->grille[tire->x][tire->y]=eau_touche;
     }
     else
     {
         touche=1;
         printf("Vous avez toucher un bateau !\n");
-        joueur1->grilleTire[tire.x][tire.y] = bat_toucher;
-        joueur2->grille[tire.x][tire.y]=bat_toucher;
+        joueur1->grilleTire[tire->x][tire->y] = bat_toucher;
+        joueur2->grille[tire->x][tire->y]=bat_toucher;
         switch (idcase)
         {
         case ID_porteAvion:
@@ -215,35 +239,78 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2){
     }
 
     }
+    free(tire);
     return touche;
-    
 }
-void etatBateau(Bateau t)
+int etat(Grille_j *j1,Grille_j *j2)
 {
-    if (t.vieBateau >= 1)
+    int enVie=0;
+    if (j1->contre_torpilleur.vieBateau==0)
     {
-        printf("le bateau %s lui reste : %d point de vie ! ", t.nom, t.vieBateau);
+        j1->vie--;
+        j1->contre_torpilleur.vieBateau=-1;
+    }
+    else if (j1->porteAvion.vieBateau == 0)
+    {
+        j1->vie--;
+        j1->porteAvion.vieBateau = -1;
+    }else
+    if (j1->sous_marin.vieBateau == 0)
+    {
+        j1->vie--;
+        j1->sous_marin.vieBateau = -1;
+    }
+    else if (j1->torpilleur.vieBateau == 0)
+    {
+        j1->vie--;
+        j1->torpilleur.vieBateau = -1;
+    }
+    if (j1->croiseur.vieBateau == 0)
+    {
+        j1->vie--;
+        j1->croiseur.vieBateau = -1;
+    }
+    //
+    if (j2->contre_torpilleur.vieBateau == 0)
+    {
+        j2->vie--;
+        j2->contre_torpilleur.vieBateau = -1;
+    }
+    else if (j2->porteAvion.vieBateau == 0)
+    {
+        j2->vie--;
+        j2->porteAvion.vieBateau = -1;
+    }
+    else if (j2->sous_marin.vieBateau == 0)
+    {
+        j2->vie--;
+        j2->sous_marin.vieBateau = -1;
+    }
+    else if (j2->torpilleur.vieBateau == 0)
+    {
+        j2->vie--;
+        j2->torpilleur.vieBateau = -1;
+    }
+    if (j2->croiseur.vieBateau == 0)
+    {
+        j2->vie--;
+        j2->croiseur.vieBateau = -1;
+    }
+    if (j1->vie<=0)
+    {
+        printf("Joueur 2 à gagner !");
+        return 1;
+    }
+    if (j2->vie <= 0)
+    {
+        printf("Joueur 1 à gagner !");
+        return 1;
     }
     else
     {
-        printf("le bateau %s viens d'étre coulé...", t.nom);
+        return 0;
     }
+    
 }
 
-int main(int argc, char const *argv[])
-{
-    char test[10] = "B9V";
-    Coordonnees c;
-    Grille_j p,j2;
-    p=initaliser_grille(p);
-    j2=initaliser_grille(j2);
-    iniBateau(&j2);
-    iniBateau(&p);
-    j2= placerBateau(j2, j2.porteAvion);
-    afficherGrille(j2.grille);
-    printf("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\n");
-    attaque(&p,&j2);
-    etatBateau(j2.porteAvion);
-    afficherGrille(j2.grille);
-    return 0;
-}
+
