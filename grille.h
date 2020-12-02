@@ -25,7 +25,8 @@
 #define eau 0
 #define eau_touche 1
 
-// couleur 
+// couleur
+// source : https://stackoverflow.com/questions/3585846/color-text-in-terminal-applications-in-unix
 #define RED "\x1b[31m"
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
@@ -51,10 +52,10 @@ typedef struct {
 	Bateau porteAvion, croiseur, contre_torpilleur, sous_marin, torpilleur;
 
 }Grille_j;
-void initaliser_grille(Grille_j *j1, Grille_j *j2);
+void initialiser_grille(Grille_j *j1, Grille_j *j2);
 void iniBateau(Grille_j *j, Grille_j *h);
 int attaque(Grille_j *joueur1, Grille_j *joueur2);
 void afficherGrille(int grille[TGRILLE][TGRILLE]);
 Grille_j *placerBateau(Grille_j *g, Bateau *b);
-void etatBateau(Bateau t);
+
 #endif
