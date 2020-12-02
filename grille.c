@@ -2,16 +2,15 @@
 #include "grille.h"
 
 
-//TODO: placer  bateau avec orientation :ok
+//TODO: placer bateau avec orientation : ok
 //afficher grille avec coordonnées : ok 
-// placer bateau énemie par joueur ou IA :
-//attaque joueur et/ou IA
-// gerer le JcJ et JcIA 
+//placer bateau ennemi par joueur ou IA :
+//attaque joueur et/ou IA : 
+//gérer le JcJ et JcIA :
 
 
-
-//initialise la grille avec de l'eau partout donc une valeur égale à 0.Retourne type Grille
-Grille_j initaliser_grille(Grille_j h)
+//initialise la grille avec de l'eau partout donc une valeur egale a 0. Retourne type Grille
+Grille_j initialiser_grille(Grille_j h)
 {
     int i, j;
     for (i = 0; i < TGRILLE; i++)
@@ -48,7 +47,7 @@ void iniBateau(Grille_j *j)
     
 }
 
-//on affiche la grille avec differente couleur pour chaque situation : eau , eau déja touché par un tir, un bateau ou alors un batteau touché 
+//on affiche la grille avec differentes couleurs pour chaque situation : eau , eau deja touchee par un tir, un bateau ou alors un bateau touche
 void afficherGrille(int grille[TGRILLE][TGRILLE])
 {
     int i, j;
@@ -80,14 +79,14 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
         printf("%s\n", LIGNE);
     }
 }
-//fonction pour placer les bateaux en fonction de leurs coordonnées et de leurs direction
-//vie bateau est égal aussi a la taille du bateau en début de partie
+//fonction pour placer les bateaux en fonction de leurs coordonnees et de leurs directions
+//vie bateau est egale aussi a la taille du bateau en debut de partie
 Grille_j placerBateau(Grille_j g, Bateau b)
 {
     system("clear");
     bool fini = false;
     int i;
-    //chaine de caractere pour récuperer les coordonnées du bateau;
+    //chaine de caracteres pour recuperer les coordonnees du bateau;
     char coordonnee[4];
     afficherGrille(g.grille);
     Coordonnees c_bateau; 
@@ -97,12 +96,12 @@ Grille_j placerBateau(Grille_j g, Bateau b)
         printf("Position du bateau : ");
         scanf("%s",coordonnee);
         c_bateau = caracToCdn(coordonnee);
-        // on test ici c'est les coordonnes rentré son comprise entre 0 et 9 ;
+        // on teste ici c'est les coordonnees rentrees sont comprises entre 0 et 9 ;
         if (c_bateau.x < 0 || c_bateau.y<0 || c_bateau.x > TGRILLE || c_bateau.y > TGRILLE)
         {
             printf("Mauvaise coordonnées veuillez réassayer\n");
             c_valide=false;
-        }//on test ici quand on met le bateau a l'horizontal la taille du bateau ne dépasse pas la grille
+        }//on teste ici quand on met le bateau a l'horizontal la taille du bateau ne depasse pas la grille
         else if (c_bateau.placement == 'V')
         {
             if (c_bateau.x+b.vieBateau >TGRILLE)
@@ -110,7 +109,7 @@ Grille_j placerBateau(Grille_j g, Bateau b)
                 printf("Limite de la grille dépasser\n");
                 c_valide = false;
             }else
-            //on verifie si un bateau n'a pas été placer avant
+            //on verifie si un bateau n'a pas ete place avant
             {
                 for ( i = c_bateau.y; i < b.vieBateau+c_bateau.y; i++)
                 {
@@ -128,7 +127,7 @@ Grille_j placerBateau(Grille_j g, Bateau b)
             c_valide = false;
          }
         else
-        //on verifie si un bateau n'a pas été placer avant
+        //on verifie si un bateau n'a pas ete place avant
         {
             for (i = c_bateau.x; i < c_bateau.x+b.vieBateau; i++)
             {
@@ -146,7 +145,7 @@ Grille_j placerBateau(Grille_j g, Bateau b)
         }
         
     }
-    //on place le bateau sur la grille grace au coordonnées
+    //on place le bateau sur la grille grace au coordonnees
     if (c_bateau.placement == 'V')
     {
         for (i = c_bateau.x; i < c_bateau.x + b.vieBateau; i++)
@@ -164,8 +163,8 @@ Grille_j placerBateau(Grille_j g, Bateau b)
     }    
     return g;
 }
-//ici on crée la fonction tire qui va tiré sur la grille énnemie le but étant de montré sUR la grille si un bateau a été touché,
-//sans afficher la grille énemie au joueur qui tire 
+//ici on cree la fonction tire qui va tirer sur la grille ennemie le but etant de montrer sur la grille si un bateau a ete touche,
+//sans afficher la grille ennemie au joueur qui tire 
 int attaque(Grille_j *joueur1,Grille_j *joueur2){
     int touche = 0;
     Coordonnees tire;
@@ -235,8 +234,8 @@ int main(int argc, char const *argv[])
     char test[10] = "B9V";
     Coordonnees c;
     Grille_j p,j2;
-    p=initaliser_grille(p);
-    j2=initaliser_grille(j2);
+    p=initialiser_grille(p);
+    j2=initialiser_grille(j2);
     iniBateau(&j2);
     iniBateau(&p);
     j2= placerBateau(j2, j2.porteAvion);
