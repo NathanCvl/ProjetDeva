@@ -2,12 +2,6 @@
 #include "grille.h"
 
 
-//TODO: placer bateau avec orientation : ok
-//afficher grille avec coordonnées : ok 
-//placer bateau ennemi par joueur ou IA :
-//attaque joueur et/ou IA : 
-//gérer le JcJ et JcIA :
-
 //initialise la grille avec de l'eau partout donc une valeur egale a 0. Retourne type Grille
 void initialiser_grille(Grille_j *j1, Grille_j *j2)
 {
@@ -118,7 +112,7 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
         printf("Position du bateau : \n");
         scanf("%s",coordonnee);
         c_bateau = caracToCdn(coordonnee);
-        // on test ici c'est les coordonnes rentré son comprise entre 0 et 9 ;
+        // on test ici c'est les coordonnes rentrees sont comprises entre 0 et 9 ;
         if (c_bateau->x < 0 || c_bateau->y<0 || c_bateau->x > TGRILLE || c_bateau->y > TGRILLE)
         {
             printf("Mauvaise coordonnées veuillez réassayer\n");
@@ -167,7 +161,7 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
         }
         
     }
-    //on place le bateau sur la grille grace au coordonnées
+    //on place le bateau sur la grille grace aux coordonnees
     if (c_bateau->placement == 'V')
     {
         for (i = c_bateau->x; i < c_bateau->x + b->vieBateau; i++)
@@ -187,8 +181,8 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
     free(c_bateau);
     return g;
 }
-//ici on crée la fonction tire qui va tiré sur la grille énnemie le but étant de montré sUR la grille si un bateau a été touché,
-//sans afficher la grille énemie au joueur qui tire 
+//ici on cree la fonction tire qui va tirer sur la grille ennemie le but etant de montrer sur la grille si un bateau a ete touche,
+//sans afficher la grille ennemie au joueur qui tire 
 // si retourne 1 le joueur retire 
 int attaque(Grille_j *joueur1,Grille_j *joueur2){
     afficherGrille(joueur1->grilleTire);
@@ -203,19 +197,19 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2){
     idcase = joueur2->grille[tire->x][tire->y];
     if (idcase == bat_toucher)
     {
-        printf("Vous avez déja attaquer cette case !\n");
-        printf("Sur quel case voulez vous tiré ?\n");
+        printf("Vous avez déjà attaqué cette case ! \n ");
+        printf("Sur quelle case voulez-vous tirer ? \n ");
         scanf("%s", c_tire);
     }
     else if (idcase== eau)
-    {   printf("tire raté\n");
+    {   printf("tir raté\n");
         joueur1->grilleTire[tire->x][tire->y]=eau_touche;
         joueur2->grille[tire->x][tire->y]=eau_touche;
     }
     else
     {
         touche=1;
-        printf("Vous avez toucher un bateau !\n");
+        printf("Vous avez touché un bateau ! \n ");
         joueur1->grilleTire[tire->x][tire->y] = bat_toucher;
         joueur2->grille[tire->x][tire->y]=bat_toucher;
         switch (idcase)
@@ -243,5 +237,4 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2){
     free(tire);
     return touche;
 }
-
 
