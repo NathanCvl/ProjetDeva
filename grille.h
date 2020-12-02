@@ -14,8 +14,8 @@
 #define ID_torpilleur 504
 #define bat_toucher 505
 //definition d'un type bateau avec leurs ID et leurs points de vie
-//on doit définir des points de vie pour les bateaux pour définir leurs états dans la partie quand la vie du bateau est à 0 le bateau est coulé
-//on devra donc définir un code pour chaque bateau pour pouvoir récupéré sur quel bateau on tire
+//on doit definir des points de vie pour les bateaux pour definir leurs etats dans la partie quand la vie du bateau est a 0 le bateau est coule
+//on devra donc definir un code pour chaque bateau pour pouvoir recuperer sur quel bateau on tire
 #define TGRILLE 10
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,8 +35,8 @@
 #define RESET "\x1b[0m"
 
 /*
-definition de la grille avec le nom des bateau et leurs type et la définiton de deux matrice qui 
-represente la grille du joueur 1 et 2 ou du joueur 1 contre l'IA 
+definition de la grille avec le nom des bateaux et leurs types et la definiton de deux matrices qui 
+represente la grille du joueur 1 et 2 ou du joueur 1 contre l'IA
 */
 
 typedef struct

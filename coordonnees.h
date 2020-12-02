@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-/* définiton d'une structure coordonnees pour pour stocker la direction et les coordonnées dans une seul variable*/
+/* definiton d'une structure coordonnees pour pour stocker la direction et les coordonnees dans une seule variable*/
 typedef struct{
     int x, y;
-    char placement; /* pour définir la direction du bateau sur la grille */
+    char placement; /* pour definir la direction du bateau sur la grille */
 } Coordonnees;
 Coordonnees *caracToCdn(char cdn[]);
 
