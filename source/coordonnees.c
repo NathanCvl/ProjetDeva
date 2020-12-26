@@ -1,4 +1,4 @@
-#include "coordonnees.h"
+#include "../header/coordonnees.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

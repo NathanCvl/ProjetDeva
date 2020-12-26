@@ -1,5 +1,5 @@
-#include "grille.h"
-#include "coordonnees.h"
+#include "../header/grille.h"
+#include "../header/coordonnees.h"
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -104,7 +104,7 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB)
     bool fini = false;
     int i;
     //chaine de caracteres pour recuperer les coordonnees du bateau;
-    char *coordonnee=NULL;
+    char coordonnee[4];
     afficherGrille(g->grille);
     printf("\n");
     Coordonnees *c_bateau = NULL;
@@ -120,7 +120,6 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB)
         }
         else
         {
-            c_bateau= (Coordonnees *)malloc(sizeof(Coordonnees));
             c_bateau->x=generer_borne(10);
             c_bateau->y=generer_borne(10);
             if (generer_borne(2)==0)
@@ -179,9 +178,9 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB)
         else
         //on verifie si un bateau n'a pas ete place avant
         {
-            for (i = c_bateau->x; i < c_bateau->x+b->vieBateau; i++)
+            for (i = c_bateau->y; i < c_bateau->y+b->vieBateau; i++)
             {
-                if (g->grille[i][c_bateau->y] != eau)
+                if (g->grille[c_bateau->x][i] != eau)
                 {
                     if (JouB == 0)
                     {
@@ -250,15 +249,12 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB){
         }
 
     idcase = joueur2->grille[tire->x][tire->y];
-    if (idcase == bat_toucher || idcase==eau_touche)
+    if (idcase == eau || idcase==eau_touche)
     {
-        printf("Vous avez déjà attaqué cette case ! \n ");
-        afficherGrille(joueur2->grilleTire);
-    }
-    else if (idcase== eau)
-    {   printf("tir raté\n");
-        joueur1->grilleTire[tire->x][tire->y]=eau_touche;
-        joueur2->grille[tire->x][tire->y]=eau_touche;
+        printf("tir raté\n");
+        joueur1->grilleTire[tire->x][tire->y] = eau_touche;
+        joueur2->grille[tire->x][tire->y] = eau_touche;
+
         return 0;
     }
     else if (idcase == joueur2->contre_torpilleur.idBateau || idcase == joueur2->croiseur.idBateau || idcase == joueur2->porteAvion.idBateau || idcase == joueur2->sous_marin.idBateau || idcase == joueur2->torpilleur.idBateau)
@@ -284,6 +280,7 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB){
             joueur2->torpilleur.vieBateau--;
             break;
         default:
+            return 0;
             break;
         }
         touche = true;
