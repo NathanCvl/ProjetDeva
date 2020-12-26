@@ -1,6 +1,10 @@
-#include "coordonnees.h"
 #include "grille.h"
-
+#include "coordonnees.h"
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
 
 //initialise la grille avec de l'eau partout donc une valeur egale a 0. Retourne type Grille
 void initialiser_grille(Grille_j *j1, Grille_j *j2)
@@ -65,8 +69,7 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
 {
     int i, j;
 
-
-    printf("\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n");
+    printf(MAGENTA "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" RESET);
     printf(MAGENTA "--+---+---+---+---+---+---+---+---+---+---+" RESET);
     for (i = 0; i < TGRILLE; i++)
     {
@@ -95,13 +98,13 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
 }
 //fonction pour placer les bateaux en fonction de leurs coordonnees et de leurs directions
 //vie bateau est egale aussi a la taille du bateau en debut de partie
-Grille_j *placerBateau(Grille_j *g, Bateau *b)
+Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB)
 {
-    system("clear");
+    srand(time(NULL));
     bool fini = false;
     int i;
     //chaine de caracteres pour recuperer les coordonnees du bateau;
-    char coordonnee[4];
+    char *coordonnee=NULL;
     afficherGrille(g->grille);
     printf("\n");
     Coordonnees *c_bateau = NULL;
@@ -109,9 +112,31 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
     while (fini == false)
     {
         bool c_valide = true;
-        printf("Position du bateau : \n");
-        scanf("%s",coordonnee);
-        c_bateau = caracToCdn(coordonnee);
+        if (JouB==0)
+        {
+            printf("Position du bateau : \n");
+            scanf("%s", coordonnee);
+            c_bateau = caracToCdn(coordonnee);
+        }
+        else
+        {
+            c_bateau= (Coordonnees *)malloc(sizeof(Coordonnees));
+            c_bateau->x=generer_borne(10);
+            c_bateau->y=generer_borne(10);
+            if (generer_borne(2)==0)
+            {
+                c_bateau->placement='V';
+            }else
+            {
+                c_bateau->placement='H';
+            }
+            
+            
+        }
+        
+        
+    
+     
         // on test ici c'est les coordonnes rentrees sont comprises entre 0 et 9 ;
         if (c_bateau->x < 0 || c_bateau->y<0 || c_bateau->x > TGRILLE || c_bateau->y > TGRILLE)
         {
@@ -122,7 +147,10 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
         {
             if (c_bateau->x+b->vieBateau >TGRILLE)
             {
-                printf("Limite de la grille dépasser\n");
+                if (JouB == 0)
+                {
+                    printf("Limite de la grille dépasser\n");
+                }
                 c_valide = false;
             }else
             //on verifie si un bateau n'a pas ete place avant
@@ -131,15 +159,21 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
                 {
                     if (g->grille[i][c_bateau->y]!=eau)
                     {
-                        printf("Il y'a déja un bateau ici\n");
+                        if (JouB==0)
+                        {
+                            printf("Il y'a déja un bateau ici\n");
+                        }
+                        
                         c_valide =false;
-                        break;
                     }     
                 }
             }
         }
         else if (c_bateau->y+b->vieBateau > TGRILLE){
-            printf("Limite de la grille dépasser\n");
+            if (JouB == 0)
+            {
+                printf("Limite de la grille dépasser\n");
+            }
             c_valide = false;
          }
         else
@@ -149,9 +183,12 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
             {
                 if (g->grille[i][c_bateau->y] != eau)
                 {
-                    printf("Il y'a déja un bateau ici\n");
+                    if (JouB == 0)
+                    {
+                        printf("Il y'a déja un bateau ici\n");
+                    }
+
                     c_valide = false;
-                    break;
                 }
             }
         }
@@ -181,34 +218,51 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b)
     free(c_bateau);
     return g;
 }
+
+
+
+
 //ici on cree la fonction tire qui va tirer sur la grille ennemie le but etant de montrer sur la grille si un bateau a ete touche,
 //sans afficher la grille ennemie au joueur qui tire 
 // si retourne 1 le joueur retire 
-int attaque(Grille_j *joueur1,Grille_j *joueur2){
+int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB){
+    bool touche =false;
     afficherGrille(joueur1->grilleTire);
-    int touche = 0;
     Coordonnees *tire = NULL;
     tire = (Coordonnees *)malloc(sizeof(Coordonnees));
     int idcase;
     char c_tire[4];
-    printf("Sur quel case voulez vous tiré ?\n");
-    scanf("%s",c_tire);
-    tire = caracToCdn(c_tire);
+
+    while (touche==false)
+    {
+
+        if (JouB == 0)
+        {
+            printf("Coordonnées du tire : \n");
+            scanf("%s", c_tire);
+            tire = caracToCdn(c_tire);
+        }
+        else
+        {
+            tire = (Coordonnees *)malloc(sizeof(Coordonnees));
+            tire->x = generer_borne(10);
+            tire->y = generer_borne(10);
+        }
+
     idcase = joueur2->grille[tire->x][tire->y];
-    if (idcase == bat_toucher)
+    if (idcase == bat_toucher || idcase==eau_touche)
     {
         printf("Vous avez déjà attaqué cette case ! \n ");
-        printf("Sur quelle case voulez-vous tirer ? \n ");
-        scanf("%s", c_tire);
+        afficherGrille(joueur2->grilleTire);
     }
     else if (idcase== eau)
     {   printf("tir raté\n");
         joueur1->grilleTire[tire->x][tire->y]=eau_touche;
         joueur2->grille[tire->x][tire->y]=eau_touche;
+        return 0;
     }
-    else
+    else if (idcase == joueur2->contre_torpilleur.idBateau || idcase == joueur2->croiseur.idBateau || idcase == joueur2->porteAvion.idBateau || idcase == joueur2->sous_marin.idBateau || idcase == joueur2->torpilleur.idBateau)
     {
-        touche=1;
         printf("Vous avez touché un bateau ! \n ");
         joueur1->grilleTire[tire->x][tire->y] = bat_toucher;
         joueur2->grille[tire->x][tire->y]=bat_toucher;
@@ -226,15 +280,19 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2){
         case ID_sous_marin:
             joueur2->sous_marin.vieBateau--;
             break;
-        case ID_torpilleur: 
+        case ID_torpilleur:
             joueur2->torpilleur.vieBateau--;
-
+            break;
         default:
             break;
+        }
+        touche = true;
     }
-
+    
     }
     free(tire);
-    return touche;
+    return 1;
+
 }
+
 

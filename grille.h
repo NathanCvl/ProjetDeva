@@ -1,5 +1,5 @@
-#ifndef _JEUX_
-#define _JEUX_
+#ifndef _GRILLE_
+#define _GRILLE_
 //Point de vie et taille du bateau
 #define t_porte_avion 5
 #define t_croiseur 4
@@ -17,10 +17,7 @@
 //on doit definir des points de vie pour les bateaux pour definir leurs etats dans la partie quand la vie du bateau est a 0 le bateau est coule
 //on devra donc definir un code pour chaque bateau pour pouvoir recuperer sur quel bateau on tire
 #define TGRILLE 10
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
+
 // constante grille
 #define eau 0
 #define eau_touche 1
@@ -54,8 +51,9 @@ typedef struct {
 }Grille_j;
 void initialiser_grille(Grille_j *j1, Grille_j *j2);
 void iniBateau(Grille_j *j, Grille_j *h);
-int attaque(Grille_j *joueur1, Grille_j *joueur2);
+int attaque(Grille_j *joueur1, Grille_j *joueur2,int JouB);
 void afficherGrille(int grille[TGRILLE][TGRILLE]);
-Grille_j *placerBateau(Grille_j *g, Bateau *b);
-
+Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB);
+int generer_borne(int n);
+char *cAleatoire();
 #endif
