@@ -49,8 +49,7 @@ int generer_borne(int n)
         // (Worst case the loop condition should succeed 50% of the time,
         // so we can expect to bail out of this loop pretty quickly.)
         int r;
-        while ((r = rand()) >= end)
-            ;
+        while ((r = rand()) >= end);
 
         return r % n;
     }
