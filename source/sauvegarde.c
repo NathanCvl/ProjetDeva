@@ -1,37 +1,38 @@
 #include "../header/sauvegarde.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "../header/grille.h"
 
-void SaveGrille(int grille[TGRILLE][TGRILLE])
+
+void SaveGrille(int grille[TGRILLE][TGRILLE],FILE* fichier,char nom[])
 {
-    int i, j;
-
-    printf(MAGENTA "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" RESET);
-    printf(MAGENTA "--+---+---+---+---+---+---+---+---+---+---+" RESET);
+    int i,j;
+    fichier = fopen(nom,"w+");
+    fprintf(fichier, "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" );
+    fprintf(fichier, "--+---+---+---+---+---+---+---+---+---+---+" );
     for (i = 0; i < TGRILLE; i++)
     {
-        printf(MAGENTA "\n%c |" RESET, 'A' + i);
+        fprintf(fichier, "\n%c |" , 'A' + i);
         for (j = 0; j < TGRILLE; j++)
         {
             if (grille[i][j] == eau)
             {
-                printf("%s", BLUE "   " MAGENTA "|" RESET);
+                fprintf(fichier,"%s",  "   "  "|" );
             }
             else if (grille[i][j] == eau_touche)
             {
-                printf("%s", YELLOW " * " MAGENTA "|" RESET);
+                fprintf(fichier,"%s",  " * "  "|" );
             }
             else if (grille[i][j] == ID_contre_torpilleur || grille[i][j] == ID_croiseur || grille[i][j] == ID_porteAvion || grille[i][j] == ID_sous_marin || grille[i][j] == ID_torpilleur)
             {
-                printf("%s", GREEN "[$]" MAGENTA "|" RESET);
+                fprintf(fichier,"%s",  "[$]"  "|" );
             }
             else
             {
-                printf("%s", RED "[$]" MAGENTA "|" RESET);
+                fprintf(fichier,"%s",  "[$]"  "|" );
             }
         }
-        printf("\n");
-        printf(MAGENTA "--+---+---+---+---+---+---+---+---+---+---+" RESET);
+        fprintf(fichier,"\n");
+        fprintf(fichier, "--+---+---+---+---+---+---+---+---+---+---+" );
     }
-    printf("\n");
-}
+    fprintf(fichier,"\n");
+    }
+    
