@@ -1,6 +1,8 @@
-#include "./header/partie.h"
+#include "header/partie.h"
 #include <stdlib.h>
 #include <stdio.h>
+
+
 
 int main(int argc, char const *argv[])
 {

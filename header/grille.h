@@ -21,7 +21,19 @@
 // constante grille
 #define eau 0
 #define eau_touche 1
+#if defined(WIN32)
+#include <windows.h>
 
+	#define RED SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	#define GREEN SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
+	#define BLUE SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE);
+	#define CYAN SetConsoleTextAttribute(hConsole,FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+
+	#define RESET SetConsoleTextAttribute(hConsole, saved_attributes);
+
+
+
+#elif(UNIX)
 // couleur
 // source : https://stackoverflow.com/questions/3585846/color-text-in-terminal-applications-in-unix
 #define RED "\x1b[31m"
@@ -31,6 +43,8 @@
 #define MAGENTA "\x1b[35m"
 #define CYAN "\x1b[36m"
 #define RESET "\x1b[0m"
+#endif
+
 
 /*
 definition de la grille avec le nom des bateaux et leurs types et la definiton de deux matrices qui 

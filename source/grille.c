@@ -67,13 +67,59 @@ void iniBateau(Grille_j *j, Grille_j *h)
 //on affiche la grille avec differentes couleurs pour chaque situation : eau , eau deja touchee par un tir, un bateau ou alors un bateau touche
 void afficherGrille(int grille[TGRILLE][TGRILLE])
 {
-    int i, j;
+    int i,j;
+#if defined(WIN32)
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+    /* Save current attributes */
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+    GREEN
+    printf("\n   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n");
+    printf(" --+---+---+---+---+---+---+---+---+---+---+" );
 
-    printf(MAGENTA "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" RESET);
+    for (i = 0; i < TGRILLE; i++)
+    {
+        printf( " \n %c |" , 'A'+i);
+        for (j = 0; j < TGRILLE; j++)
+        {
+            if (grille[i][j] == eau){
+                printf("%s",  "   "   "|" );
+            }
+            else if (grille[i][j] == eau_touche){
+                RED
+                printf("%s",  " * ");
+                RESET
+                printf("|" );
+            }
+            else if (grille[i][j] == ID_contre_torpilleur || grille[i][j] == ID_croiseur || grille[i][j] == ID_porteAvion || grille[i][j] == ID_sous_marin || grille[i][j] == ID_torpilleur)
+            {
+                CYAN
+                printf("%s", "[$]" );
+                RESET
+                printf( "|" );
+            }else
+            {
+                RED
+                printf("%s", "[$]" );
+                RESET
+                printf( "|" );
+            }
+            
+        }
+        printf("\n");
+        GREEN
+        printf( " --+---+---+---+---+---+---+---+---+---+---+");
+    }
+    printf("\n");
+}
+#elif(UNIX)
+ printf(MAGENTA "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" RESET);
     printf(MAGENTA "--+---+---+---+---+---+---+---+---+---+---+" RESET);
     for (i = 0; i < TGRILLE; i++)
     {
-        printf(MAGENTA "\n%c |" RESET, 'A'+i);
+        printf(MAGENTA "\n %c |" RESET, 'A'+i);
         for (j = 0; j < TGRILLE; j++)
         {
             if (grille[i][j] == eau){
@@ -96,6 +142,10 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
     }
     printf("\n");
 }
+#endif
+    int i, j;
+
+   
 //fonction pour placer les bateaux en fonction de leurs coordonnees et de leurs directions
 //vie bateau est egale aussi a la taille du bateau en debut de partie
 Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB)
@@ -213,7 +263,6 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB)
             g->grille[c_bateau->x][i] = b->idBateau;
         }
     }
-    afficherGrille(g->grille);
     free(c_bateau);
     return g;
 }
