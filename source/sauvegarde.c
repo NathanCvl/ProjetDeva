@@ -1,26 +1,27 @@
 #include "../header/sauvegarde.h"
 
 
-void SaveGrille(int grille[TGRILLE][TGRILLE],FILE* fichier,char nom[])
+void SaveGrille(int grille[TGRILLE][TGRILLE],char nom[])
 {
-    int i,j;
+      FILE * fichier =NULL;
+        int i,j;
     fichier = fopen(nom,"w+");
   
     for (i = 0; i < TGRILLE; i++)
     {
         for (j = 0; j < TGRILLE; j++)
         {
-            fprintf(fichier ,"%i",grille[i][j]);
+            fprintf(fichier ,"%d",grille[i][j]);
         }
         fprintf(fichier,"\n");
     }
     fclose(fichier);
 }
-void ChargerGrille(int grille[TGRILLE][TGRILLE], FILE *file, char nom[])
-{
+void ChargerGrille(int grille[TGRILLE][TGRILLE], char nom[])
+{   FILE * fichier =NULL;
     int i=0,j=0;
-    file = fopen(nom, "r");
-    char c = fgetc(file); /* lecture du 1er caractère du fichier */
+    fichier = fopen(nom, "r+");
+    char c = fgetc(fichier); /* lecture du 1er caractère du fichier */
     while (c != EOF) /* Tant qu'on est pas en fin de fichier */
     {
         if (c == '\n')
@@ -35,7 +36,7 @@ void ChargerGrille(int grille[TGRILLE][TGRILLE], FILE *file, char nom[])
             j++;           /* index suivant pour le caractère suivant */
         }
 
-        c = fgetc(file); /* lecture du prochaine caractère */
+        c = fgetc(fichier); /* lecture du prochaine caractère */
     }
-fclose(file);
+fclose(fichier);
 }

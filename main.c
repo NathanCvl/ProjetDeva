@@ -1,12 +1,10 @@
 #include "./header/partie.h"
-#include "./header/sauvegarde.h"
 
 
 
 int main(int argc, char const *argv[])
 {
-    FILE * fichier =NULL;
-    partie(1,fichier,"save.txt");
+    partie(1,"save.txt");
    
     return 0;
 }

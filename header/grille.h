@@ -7,12 +7,12 @@
 #define t_sous_marin 3
 #define t_torpilleur 2
 //idbateau
-#define ID_porteAvion 500
-#define ID_croiseur 501
-#define ID_contre_torpilleur 502
-#define ID_sous_marin 503
-#define ID_torpilleur 504
-#define bat_toucher 505
+#define ID_porteAvion 2
+#define ID_croiseur 3
+#define ID_contre_torpilleur 4
+#define ID_sous_marin 5
+#define ID_torpilleur 6
+#define bat_toucher 7
 //definition d'un type bateau avec leurs ID et leurs points de vie
 //on doit definir des points de vie pour les bateaux pour definir leurs etats dans la partie quand la vie du bateau est a 0 le bateau est coule
 //on devra donc definir un code pour chaque bateau pour pouvoir recuperer sur quel bateau on tire
@@ -63,7 +63,7 @@ typedef struct {
 }Grille_j;
 void initialiser_grille(Grille_j *j1, Grille_j *j2);
 void iniBateau(Grille_j *j, Grille_j *h);
-int attaque(Grille_j *joueur1, Grille_j *joueur2,int JouB);
+int attaque(Grille_j *joueur1, Grille_j *joueur2, int JouB, int difficulter, int RecupC);
 void afficherGrille(int grille[TGRILLE][TGRILLE]);
 Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB);
 int generer_borne(int n);

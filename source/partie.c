@@ -75,23 +75,24 @@ void tourJ(Grille_j *j1,Grille_j *j2,int JouB){
     // joueur 1 attaque le jouer 2;
     
     //si le joueur touche un bateau il rejoue
-    toucher = attaque(j1, j2,1);
-    while (etat(j1,j2)==0)
+    printf("j1 attaque j2 \n");
+    toucher = attaque(j1, j2,1,1,0);
+    while (etat(j1,j2)!=1)
     {
 
         if (toucher==1)
         {
             printf("j1 attaque j2 \n");
-            toucher = attaque(j1, j2, 1);
+            toucher = attaque(j1, j2, 1,1,0);
             afficherGrille(j1->grilleTire);
         }else
         {
             printf("j2 attaque j1 \n");
-            toucher = attaque(j2, j1, JouB);
+            toucher = attaque(j2, j1, JouB,1,0);
             if (toucher == 1)
             {
                 printf("j2 attaque j1 \n");
-                toucher = attaque(j2, j1, JouB);
+                toucher = attaque(j2, j1, JouB,1,1);
                 afficherGrille(j2->grilleTire);
             }else if(toucher !=1)
             {
@@ -102,20 +103,23 @@ void tourJ(Grille_j *j1,Grille_j *j2,int JouB){
     }
     
 }
-void partie(int JouB,FILE* fichier,char nom[]){
+void partie(int JouB,char nom[]){
     Grille_j *j1=NULL, *j2=NULL;
     j1 =(Grille_j *)malloc(sizeof(Grille_j));
     j2 = (Grille_j *)malloc(sizeof(Grille_j));
-
     initialiser_grille(j1,j2);
     iniBateau(j1,j2);
-    SaveGrille(j1->grille, fichier, nom);
-
+    SaveGrille(j1->grille, nom);
     Bat_grille(j1,j2,JouB);
     tourJ(j1,j2,JouB);
     afficherGrille(j1->grille);
     afficherGrille(j2->grille);
-    SaveGrille(j1->grille, fichier, "save2.txt");
+    SaveGrille(j1->grille,"save2.txt");
+    ChargerGrille(j1->grilleTire,"save2.txt");
+    printf("grille charger");
+    afficherGrille(j1->grilleTire);
+    free(j1);
+    free(j2);
 }
 
 

@@ -152,7 +152,7 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
 #endif
         //fonction pour placer les bateaux en fonction de leurs coordonnees et de leurs directions
         //vie bateau est egale aussi a la taille du bateau en debut de partie
-        Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
+Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
     {
         srand(time(NULL));
         bool fini = false;
@@ -270,14 +270,16 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
 //ici on cree la fonction tire qui va tirer sur la grille ennemie le but etant de montrer sur la grille si un bateau a ete touche,
 //sans afficher la grille ennemie au joueur qui tire 
 // si retourne 1 le joueur retire 
-int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB){
+int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB,int difficulter,int RecupC){
+    FILE* fichier = NULL;
+    int x;
     bool touche =false;
     afficherGrille(joueur1->grilleTire);
     Coordonnees *tire = NULL;
     tire = (Coordonnees *)malloc(sizeof(Coordonnees));
     int idcase;
     char c_tire[4];
-
+ 
     while (touche==false)
     {
 
@@ -287,27 +289,59 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB){
             scanf("%s", c_tire);
             tire = caracToCdn(c_tire);
         }
+        if (RecupC == 1&&JouB==1){
+            fichier = fopen("coordonnee.txt", "r");
+
+            fscanf(fichier, "%d%d", &tire->x, &tire->y);
+            printf("x=%d y= %d \n",tire->x,tire->y);
+            printf("Bornennnnnenejenen: %d\n", generer_borne(4));
+            int a = generer_borne(4);
+            if (a==0)
+            {
+                tire->x--;
+            }
+            if (a == 1)
+            {
+                tire->y--;
+            }
+            if (a == 2)
+            {
+                tire->x++;
+            }
+            if (a == 3)
+            {
+                tire->y++;
+            }
+            printf("x=%d y= %d \n", tire->x, tire->y);
+
+            fclose(fichier);
+        }
+        
         else
         {
-            tire = (Coordonnees *)malloc(sizeof(Coordonnees));
             tire->x = generer_borne(10);
             tire->y = generer_borne(10);
         }
 
     idcase = joueur2->grille[tire->x][tire->y];
-    if (idcase == eau || idcase==eau_touche)
+
+  
+    if(idcase == eau || idcase==eau_touche)
     {
+    
         printf("tir raté\n");
         joueur1->grilleTire[tire->x][tire->y] = eau_touche;
         joueur2->grille[tire->x][tire->y] = eau_touche;
-
         return 0;
+        
     }
     else if (idcase == joueur2->contre_torpilleur.idBateau || idcase == joueur2->croiseur.idBateau || idcase == joueur2->porteAvion.idBateau || idcase == joueur2->sous_marin.idBateau || idcase == joueur2->torpilleur.idBateau)
     {
         printf("Vous avez touché un bateau ! \n ");
         joueur1->grilleTire[tire->x][tire->y] = bat_toucher;
         joueur2->grille[tire->x][tire->y]=bat_toucher;
+    
+
         switch (idcase)
         {
         case ID_porteAvion:
@@ -330,12 +364,16 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB){
             break;
         }
         touche = true;
+        if (difficulter == 1 && JouB == 1)
+        {
+            fichier = fopen("coordonnee.txt", "w+");
+            fprintf(fichier, "%d %d", tire->x, tire->y);
+            fclose(fichier);
+        }
     }
-    
     }
-    free(tire);
+
+    fclose(fichier);
     return 1;
-
+    
 }
-
-
