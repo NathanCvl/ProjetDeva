@@ -21,7 +21,7 @@ Coordonnees *caracToCdn(char cdn[])
     Coordonnees *coord=NULL;
     coord = (Coordonnees *)malloc(sizeof(Coordonnees));
     int i;
-    char buffer[3];
+    char buffer[4];
  
 
     // ici on veut convertir deux caracteres en nombre que le caractere '10' devienne le nombre 10
@@ -43,4 +43,5 @@ Coordonnees *caracToCdn(char cdn[])
     // la direction devra etre rentree en dernier on la recupere en recuperant la derniere case du tableau cdn
     coord->placement = cdn[strlen(cdn) - 1];
     return coord;
+    free(coord);
 }

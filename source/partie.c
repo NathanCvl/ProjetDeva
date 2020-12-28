@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <time.h>
-
 //retourne 1 si un joueur a gagner la partie
 int etat(Grille_j *j1, Grille_j *j2)
 {
@@ -35,18 +34,12 @@ int generer_borne(int n)
     }
     else
     {
-        // Supporting larger values for n would requires an even more
-        // elaborate implementation that combines multiple calls to rand()
+        
         assert(n <= RAND_MAX);
 
-        // Chop off all of the values that would cause skew...
         int end = RAND_MAX / n; // truncate skew
         assert(end > 0);
         end *= n;
-
-        // ... and ignore results from rand() that fall above that limit.
-        // (Worst case the loop condition should succeed 50% of the time,
-        // so we can expect to bail out of this loop pretty quickly.)
         int r;
         while ((r = rand()) >= end);
 
@@ -56,22 +49,21 @@ int generer_borne(int n)
 //Placement des bateaux
 void Bat_grille(Grille_j *j1 ,Grille_j *j2,int JouB){
     printf("Joueur 1 placer vos bateaux !\n");
-    j1 = placerBateau(j1, &j1->porteAvion, 1);
-    j1 = placerBateau(j1, &j1->croiseur, 1);
-    j1 = placerBateau(j1, &j1->contre_torpilleur, 1);
-    j1 = placerBateau(j1, &j1->sous_marin, 1);
-    j1 = placerBateau(j1, &j1->torpilleur,1);
+    j1 = placerBateau(j1, &j1->porteAvion, 0);
+    j1 = placerBateau(j1, &j1->croiseur, 0);
+    j1 = placerBateau(j1, &j1->contre_torpilleur, 0);
+    j1 = placerBateau(j1, &j1->sous_marin, 0);
+    j1 = placerBateau(j1, &j1->torpilleur,0);
     printf("Joueur 2 placer vos bateaux !\n");
-    j2 = placerBateau(j2, &j2->porteAvion,1);
-    j2 = placerBateau(j2, &j2->croiseur,1);
-    j2 = placerBateau(j2, &j2->contre_torpilleur,1);
-    j2 = placerBateau(j2, &j2->sous_marin,1);
-    j2 = placerBateau(j2, &j2->torpilleur,1);
+    j2 = placerBateau(j2, &j2->porteAvion,JouB);
+    j2 = placerBateau(j2, &j2->croiseur,JouB);
+    j2 = placerBateau(j2, &j2->contre_torpilleur,JouB);
+    j2 = placerBateau(j2, &j2->sous_marin,JouB);
+    j2 = placerBateau(j2, &j2->torpilleur,JouB);
 }
 
 void tourJ(Grille_j *j1,Grille_j *j2,int JouB){
     int toucher;
-    int x = 0;
     // joueur 1 attaque le jouer 2;
     
     //si le joueur touche un bateau il rejoue

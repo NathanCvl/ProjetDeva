@@ -158,19 +158,22 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
         bool fini = false;
         int i;
         //chaine de caracteres pour recuperer les coordonnees du bateau;
-        char coordonnee[4];
+        char *coordonnee=NULL;
+        coordonnee = (char*)malloc(4*sizeof(char));
         afficherGrille(g->grille);
         printf("\n");
         Coordonnees *c_bateau = NULL;
         c_bateau = (Coordonnees *)malloc(sizeof(Coordonnees));
         while (fini == false)
         {
-            bool c_valide = true;
+            bool c_valide=true;
             if (JouB == 0)
             {
                 printf("Position du bateau : \n");
                 scanf("%s", coordonnee);
                 c_bateau = caracToCdn(coordonnee);
+                printf("%d",c_bateau->y);
+                printf("%d", c_bateau->x);
             }
             else
             {
@@ -187,7 +190,7 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
             }
 
             // on test ici c'est les coordonnes rentrees sont comprises entre 0 et 9 ;
-            if (c_bateau->x < 0 || c_bateau->y < 0 || c_bateau->x > TGRILLE || c_bateau->y > TGRILLE)
+            if (c_bateau->x < 0 || c_bateau->y < 0 || c_bateau->x > TGRILLE-1 || c_bateau->y > TGRILLE-1)
             {
                 printf("Mauvaise coordonnées veuillez réassayer\n");
                 c_valide = false;
@@ -219,7 +222,7 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
                     }
                 }
             }
-            else if (c_bateau->y + b->vieBateau > TGRILLE)
+            else if (c_bateau->y + b->vieBateau > TGRILLE-1)
             {
                 if (JouB == 0)
                 {
@@ -289,12 +292,11 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB,int difficulter,int Rec
             scanf("%s", c_tire);
             tire = caracToCdn(c_tire);
         }
-        if (RecupC == 1&&JouB==1){
+        if (RecupC == 1&&JouB==0){
             fichier = fopen("coordonnee.txt", "r");
 
             fscanf(fichier, "%d%d", &tire->x, &tire->y);
             printf("x=%d y= %d \n",tire->x,tire->y);
-            printf("Bornennnnnenejenen: %d\n", generer_borne(4));
             int a = generer_borne(4);
             if (a==0)
             {
@@ -363,13 +365,13 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB,int difficulter,int Rec
             return 0;
             break;
         }
-        touche = true;
-        if (difficulter == 1 && JouB == 1)
+        if (difficulter == 1 && JouB == 0)
         {
             fichier = fopen("coordonnee.txt", "w+");
             fprintf(fichier, "%d %d", tire->x, tire->y);
             fclose(fichier);
         }
+        touche = true;
     }
     }
 
