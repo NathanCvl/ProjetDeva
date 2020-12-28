@@ -31,9 +31,7 @@
 
 	#define RESET SetConsoleTextAttribute(hConsole, saved_attributes);
 
-
-
-#elif(UNIX)
+#elif __APPLE__
 // couleur
 // source : https://stackoverflow.com/questions/3585846/color-text-in-terminal-applications-in-unix
 #define RED "\x1b[31m"

@@ -1,7 +1,6 @@
 #include "../header/partie.h"
-#include <stdlib.h>
+#include "../header/sauvegarde.h"
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
@@ -57,17 +56,17 @@ int generer_borne(int n)
 //Placement des bateaux
 void Bat_grille(Grille_j *j1 ,Grille_j *j2,int JouB){
     printf("Joueur 1 placer vos bateaux !\n");
-    j1 = placerBateau(j1, &j1->porteAvion, 0);
-    j1 = placerBateau(j1, &j1->croiseur, 0);
-    j1 = placerBateau(j1, &j1->contre_torpilleur, 0);
-    j1 = placerBateau(j1, &j1->sous_marin, 0);
-    j1 = placerBateau(j1, &j1->torpilleur,0);
+    j1 = placerBateau(j1, &j1->porteAvion, 1);
+    j1 = placerBateau(j1, &j1->croiseur, 1);
+    j1 = placerBateau(j1, &j1->contre_torpilleur, 1);
+    j1 = placerBateau(j1, &j1->sous_marin, 1);
+    j1 = placerBateau(j1, &j1->torpilleur,1);
     printf("Joueur 2 placer vos bateaux !\n");
-    j2 = placerBateau(j2, &j2->porteAvion,0);
-    j2 = placerBateau(j2, &j2->croiseur,0);
-    j2 = placerBateau(j2, &j2->contre_torpilleur,0);
-    j2 = placerBateau(j2, &j2->sous_marin,0);
-    j2 = placerBateau(j2, &j2->torpilleur,0);
+    j2 = placerBateau(j2, &j2->porteAvion,1);
+    j2 = placerBateau(j2, &j2->croiseur,1);
+    j2 = placerBateau(j2, &j2->contre_torpilleur,1);
+    j2 = placerBateau(j2, &j2->sous_marin,1);
+    j2 = placerBateau(j2, &j2->torpilleur,1);
 }
 
 void tourJ(Grille_j *j1,Grille_j *j2,int JouB){
@@ -76,14 +75,14 @@ void tourJ(Grille_j *j1,Grille_j *j2,int JouB){
     // joueur 1 attaque le jouer 2;
     
     //si le joueur touche un bateau il rejoue
-    toucher = attaque(j1, j2, 0);
+    toucher = attaque(j1, j2,1);
     while (etat(j1,j2)==0)
     {
 
         if (toucher==1)
         {
             printf("j1 attaque j2 \n");
-            toucher = attaque(j1, j2, 0);
+            toucher = attaque(j1, j2, 1);
             afficherGrille(j1->grilleTire);
         }else
         {
@@ -103,18 +102,20 @@ void tourJ(Grille_j *j1,Grille_j *j2,int JouB){
     }
     
 }
-void partie(int JouB){
-
+void partie(int JouB,FILE* fichier,char nom[]){
     Grille_j *j1=NULL, *j2=NULL;
     j1 =(Grille_j *)malloc(sizeof(Grille_j));
     j2 = (Grille_j *)malloc(sizeof(Grille_j));
 
     initialiser_grille(j1,j2);
     iniBateau(j1,j2);
+    SaveGrille(j1->grille, fichier, nom);
+
     Bat_grille(j1,j2,JouB);
     tourJ(j1,j2,JouB);
     afficherGrille(j1->grille);
     afficherGrille(j2->grille);
+    SaveGrille(j1->grille, fichier, "save2.txt");
 }
 
 

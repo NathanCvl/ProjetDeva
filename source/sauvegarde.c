@@ -1,38 +1,41 @@
 #include "../header/sauvegarde.h"
-#include "../header/grille.h"
 
 
 void SaveGrille(int grille[TGRILLE][TGRILLE],FILE* fichier,char nom[])
 {
     int i,j;
     fichier = fopen(nom,"w+");
-    fprintf(fichier, "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" );
-    fprintf(fichier, "--+---+---+---+---+---+---+---+---+---+---+" );
+  
     for (i = 0; i < TGRILLE; i++)
     {
-        fprintf(fichier, "\n%c |" , 'A' + i);
         for (j = 0; j < TGRILLE; j++)
         {
-            if (grille[i][j] == eau)
-            {
-                fprintf(fichier,"%s",  "   "  "|" );
-            }
-            else if (grille[i][j] == eau_touche)
-            {
-                fprintf(fichier,"%s",  " * "  "|" );
-            }
-            else if (grille[i][j] == ID_contre_torpilleur || grille[i][j] == ID_croiseur || grille[i][j] == ID_porteAvion || grille[i][j] == ID_sous_marin || grille[i][j] == ID_torpilleur)
-            {
-                fprintf(fichier,"%s",  "[$]"  "|" );
-            }
-            else
-            {
-                fprintf(fichier,"%s",  "[$]"  "|" );
-            }
+            fprintf(fichier ,"%i",grille[i][j]);
         }
         fprintf(fichier,"\n");
-        fprintf(fichier, "--+---+---+---+---+---+---+---+---+---+---+" );
     }
-    fprintf(fichier,"\n");
+    fclose(fichier);
+}
+void ChargerGrille(int grille[TGRILLE][TGRILLE], FILE *file, char nom[])
+{
+    int i=0,j=0;
+    file = fopen(nom, "r");
+    char c = fgetc(file); /* lecture du 1er caractère du fichier */
+    while (c != EOF) /* Tant qu'on est pas en fin de fichier */
+    {
+        if (c == '\n')
+        {
+            grille[i][j] = '\0'; /* on ajoute le caractère de fin de chaîne de caractères */
+            i++, j = 0;       /* Ligne suivante, remise à 0 de l'index des caractères */
+        }
+
+        else
+        {
+            grille[i][j] = atoi(&c); /* affectation du caractère à l'index j */
+            j++;           /* index suivant pour le caractère suivant */
+        }
+
+        c = fgetc(file); /* lecture du prochaine caractère */
     }
-    
+fclose(file);
+}

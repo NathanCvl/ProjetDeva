@@ -65,61 +65,67 @@ void iniBateau(Grille_j *j, Grille_j *h)
 }
 
 //on affiche la grille avec differentes couleurs pour chaque situation : eau , eau deja touchee par un tir, un bateau ou alors un bateau touche
+#if defined(WIN32)
+void afficherGrille(int grille[TGRILLE][TGRILLE])
+{
+        int i, j;
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+        WORD saved_attributes;
+        /* Save current attributes */
+        GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+        saved_attributes = consoleInfo.wAttributes;
+        GREEN
+        printf("\n   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n");
+        printf(" --+---+---+---+---+---+---+---+---+---+---+");
+
+        for (i = 0; i < TGRILLE; i++)
+        {
+            printf(" \n %c |", 'A' + i);
+            for (j = 0; j < TGRILLE; j++)
+            {
+                if (grille[i][j] == eau)
+                {
+                    printf("%s", "   "
+                                 "|");
+                }
+                else if (grille[i][j] == eau_touche)
+                {
+                    RED
+                        printf("%s", " * ");
+                    RESET
+                    printf("|");
+                }
+                else if (grille[i][j] == ID_contre_torpilleur || grille[i][j] == ID_croiseur || grille[i][j] == ID_porteAvion || grille[i][j] == ID_sous_marin || grille[i][j] == ID_torpilleur)
+                {
+                    CYAN
+                        printf("%s", "[$]");
+                    RESET
+                    printf("|");
+                }
+                else
+                {
+                    RED
+                        printf("%s", "[$]");
+                    RESET
+                    printf("|");
+                }
+            }
+            printf("\n");
+            GREEN
+            printf(" --+---+---+---+---+---+---+---+---+---+---+");
+        }
+        printf("\n");
+    }
+#elif __APPLE__
 void afficherGrille(int grille[TGRILLE][TGRILLE])
 {
     int i,j;
-#if defined(WIN32)
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-    /* Save current attributes */
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-    GREEN
-    printf("\n   | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n");
-    printf(" --+---+---+---+---+---+---+---+---+---+---+" );
-
-    for (i = 0; i < TGRILLE; i++)
-    {
-        printf( " \n %c |" , 'A'+i);
-        for (j = 0; j < TGRILLE; j++)
-        {
-            if (grille[i][j] == eau){
-                printf("%s",  "   "   "|" );
-            }
-            else if (grille[i][j] == eau_touche){
-                RED
-                printf("%s",  " * ");
-                RESET
-                printf("|" );
-            }
-            else if (grille[i][j] == ID_contre_torpilleur || grille[i][j] == ID_croiseur || grille[i][j] == ID_porteAvion || grille[i][j] == ID_sous_marin || grille[i][j] == ID_torpilleur)
-            {
-                CYAN
-                printf("%s", "[$]" );
-                RESET
-                printf( "|" );
-            }else
-            {
-                RED
-                printf("%s", "[$]" );
-                RESET
-                printf( "|" );
-            }
-            
-        }
-        printf("\n");
-        GREEN
-        printf( " --+---+---+---+---+---+---+---+---+---+---+");
-    }
-    printf("\n");
-}
-#elif(UNIX)
- printf(MAGENTA "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" RESET);
+    printf(MAGENTA "\n  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10|\n" RESET);
     printf(MAGENTA "--+---+---+---+---+---+---+---+---+---+---+" RESET);
     for (i = 0; i < TGRILLE; i++)
     {
-        printf(MAGENTA "\n %c |" RESET, 'A'+i);
+        printf(MAGENTA "\n%c |" RESET, 'A'+i);
         for (j = 0; j < TGRILLE; j++)
         {
             if (grille[i][j] == eau){
@@ -142,133 +148,124 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
     }
     printf("\n");
 }
-#endif
-    int i, j;
 
-   
-//fonction pour placer les bateaux en fonction de leurs coordonnees et de leurs directions
-//vie bateau est egale aussi a la taille du bateau en debut de partie
-Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB)
-{
-    srand(time(NULL));
-    bool fini = false;
-    int i;
-    //chaine de caracteres pour recuperer les coordonnees du bateau;
-    char coordonnee[4];
-    afficherGrille(g->grille);
-    printf("\n");
-    Coordonnees *c_bateau = NULL;
-    c_bateau = (Coordonnees *)malloc(sizeof(Coordonnees));
-    while (fini == false)
+#endif
+        //fonction pour placer les bateaux en fonction de leurs coordonnees et de leurs directions
+        //vie bateau est egale aussi a la taille du bateau en debut de partie
+        Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
     {
-        bool c_valide = true;
-        if (JouB==0)
+        srand(time(NULL));
+        bool fini = false;
+        int i;
+        //chaine de caracteres pour recuperer les coordonnees du bateau;
+        char coordonnee[4];
+        afficherGrille(g->grille);
+        printf("\n");
+        Coordonnees *c_bateau = NULL;
+        c_bateau = (Coordonnees *)malloc(sizeof(Coordonnees));
+        while (fini == false)
         {
-            printf("Position du bateau : \n");
-            scanf("%s", coordonnee);
-            c_bateau = caracToCdn(coordonnee);
-        }
-        else
-        {
-            c_bateau->x=generer_borne(10);
-            c_bateau->y=generer_borne(10);
-            if (generer_borne(2)==0)
+            bool c_valide = true;
+            if (JouB == 0)
             {
-                c_bateau->placement='V';
-            }else
-            {
-                c_bateau->placement='H';
+                printf("Position du bateau : \n");
+                scanf("%s", coordonnee);
+                c_bateau = caracToCdn(coordonnee);
             }
-            
-            
-        }
-        
-        
-    
-     
-        // on test ici c'est les coordonnes rentrees sont comprises entre 0 et 9 ;
-        if (c_bateau->x < 0 || c_bateau->y<0 || c_bateau->x > TGRILLE || c_bateau->y > TGRILLE)
-        {
-            printf("Mauvaise coordonnées veuillez réassayer\n");
-            c_valide=false;
-        }//on test ici quand on met le bateau a l'horizontal la taille du bateau ne dépasse pas la grille
-        else if (c_bateau->placement == 'V')
-        {
-            if (c_bateau->x+b->vieBateau >TGRILLE)
+            else
+            {
+                c_bateau->x = generer_borne(10);
+                c_bateau->y = generer_borne(10);
+                if (generer_borne(2) == 0)
+                {
+                    c_bateau->placement = 'V';
+                }
+                else
+                {
+                    c_bateau->placement = 'H';
+                }
+            }
+
+            // on test ici c'est les coordonnes rentrees sont comprises entre 0 et 9 ;
+            if (c_bateau->x < 0 || c_bateau->y < 0 || c_bateau->x > TGRILLE || c_bateau->y > TGRILLE)
+            {
+                printf("Mauvaise coordonnées veuillez réassayer\n");
+                c_valide = false;
+            } //on test ici quand on met le bateau a l'horizontal la taille du bateau ne dépasse pas la grille
+            else if (c_bateau->placement == 'V')
+            {
+                if (c_bateau->x + b->vieBateau > TGRILLE)
+                {
+                    if (JouB == 0)
+                    {
+                        printf("Limite de la grille dépasser\n");
+                    }
+                    c_valide = false;
+                }
+                else
+                //on verifie si un bateau n'a pas ete place avant
+                {
+                    for (i = c_bateau->x; i < b->vieBateau + c_bateau->x; i++)
+                    {
+                        if (g->grille[i][c_bateau->y] != eau)
+                        {
+                            if (JouB == 0)
+                            {
+                                printf("Il y'a déja un bateau ici\n");
+                            }
+
+                            c_valide = false;
+                        }
+                    }
+                }
+            }
+            else if (c_bateau->y + b->vieBateau > TGRILLE)
             {
                 if (JouB == 0)
                 {
                     printf("Limite de la grille dépasser\n");
                 }
                 c_valide = false;
-            }else
+            }
+            else
             //on verifie si un bateau n'a pas ete place avant
             {
-                for ( i = c_bateau->x; i < b->vieBateau+c_bateau->x; i++)
+                for (i = c_bateau->y; i < c_bateau->y + b->vieBateau; i++)
                 {
-                    if (g->grille[i][c_bateau->y]!=eau)
+                    if (g->grille[c_bateau->x][i] != eau)
                     {
-                        if (JouB==0)
+                        if (JouB == 0)
                         {
                             printf("Il y'a déja un bateau ici\n");
                         }
-                        
-                        c_valide =false;
-                    }     
-                }
-            }
-        }
-        else if (c_bateau->y+b->vieBateau > TGRILLE){
-            if (JouB == 0)
-            {
-                printf("Limite de la grille dépasser\n");
-            }
-            c_valide = false;
-         }
-        else
-        //on verifie si un bateau n'a pas ete place avant
-        {
-            for (i = c_bateau->y; i < c_bateau->y+b->vieBateau; i++)
-            {
-                if (g->grille[c_bateau->x][i] != eau)
-                {
-                    if (JouB == 0)
-                    {
-                        printf("Il y'a déja un bateau ici\n");
+
+                        c_valide = false;
                     }
-
-                    c_valide = false;
                 }
             }
+            if (c_valide == true)
+            {
+                fini = true;
+            }
         }
-        if (c_valide == true)
+        //on place le bateau sur la grille grace aux coordonnees
+        if (c_bateau->placement == 'V')
         {
-            fini=true;
+            for (i = c_bateau->x; i < c_bateau->x + b->vieBateau; i++)
+            {
+                g->grille[i][c_bateau->y] = b->idBateau;
+            }
         }
-        
-    }
-    //on place le bateau sur la grille grace aux coordonnees
-    if (c_bateau->placement == 'V')
-    {
-        for (i = c_bateau->x; i < c_bateau->x + b->vieBateau; i++)
+        else
         {
-            g->grille[i][c_bateau->y] = b->idBateau;
+            for (i = c_bateau->y; i < c_bateau->y + b->vieBateau; i++)
+            {
+                g->grille[c_bateau->x][i] = b->idBateau;
+            }
         }
-
+        free(c_bateau);
+        return g;
     }
-    else
-    {
-        for (i = c_bateau->y; i < c_bateau->y+ b->vieBateau; i++)
-        {
-            g->grille[c_bateau->x][i] = b->idBateau;
-        }
-    }
-    free(c_bateau);
-    return g;
-}
-
-
-
 
 //ici on cree la fonction tire qui va tirer sur la grille ennemie le but etant de montrer sur la grille si un bateau a ete touche,
 //sans afficher la grille ennemie au joueur qui tire 

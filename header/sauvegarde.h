@@ -4,4 +4,5 @@
 #include <stdlib.h>
 #include "../header/grille.h"
 void SaveGrille(int grille[TGRILLE][TGRILLE], FILE *fichier, char nom[]);
+void ChargerGrille(int grille[TGRILLE][TGRILLE], FILE *fichier, char nom[]);
 #endif
