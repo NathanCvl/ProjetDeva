@@ -59,13 +59,14 @@ typedef struct {
 	int grilleTire[TGRILLE][TGRILLE];
 	int vie;
 	Bateau porteAvion, croiseur, contre_torpilleur, sous_marin, torpilleur;
+	char nomJoueur[10];
 
 }Grille_j;
 void initialiser_grille(Grille_j *j1, Grille_j *j2);
 void iniBateau(Grille_j *j, Grille_j *h);
 int attaque(Grille_j *joueur1, Grille_j *joueur2, int JouB, int difficulter, int RecupC);
 void afficherGrille(int grille[TGRILLE][TGRILLE]);
-Grille_j *placerBateau(Grille_j *g, Bateau *b,int JouB);
+Grille_j *placerBateau(Grille_j *joueur1, Bateau *b, int JouB, Grille_j *joueur2);
 int generer_borne(int n);
 char *cAleatoire();
 #endif

@@ -1,4 +1,5 @@
 #include "../header/grille.h"
+#include "../header/sauvegarde.h"
 #include "../header/coordonnees.h"
 #include <stdlib.h>
 #include <time.h>
@@ -152,15 +153,14 @@ void afficherGrille(int grille[TGRILLE][TGRILLE])
 #endif
         //fonction pour placer les bateaux en fonction de leurs coordonnees et de leurs directions
         //vie bateau est egale aussi a la taille du bateau en debut de partie
-Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
-    {
+Grille_j *placerBateau(Grille_j *joueur1, Bateau *b, int JouB,Grille_j *joueur2){ 
         srand(time(NULL));
         bool fini = false;
         int i;
         //chaine de caracteres pour recuperer les coordonnees du bateau;
         char *coordonnee=NULL;
-        coordonnee = (char*)malloc(4*sizeof(char));
-        afficherGrille(g->grille);
+        coordonnee = (char*)malloc(14*sizeof(char));
+        afficherGrille(joueur1->grille);
         printf("\n");
         Coordonnees *c_bateau = NULL;
         c_bateau = (Coordonnees *)malloc(sizeof(Coordonnees));
@@ -169,11 +169,23 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
             bool c_valide=true;
             if (JouB == 0)
             {
-                printf("Position du bateau : \n");
+                printf("Donnez la position du %s : de taille : %d \nCoordonnées a écriré sous la forme H6V, H pour placer le bateau a l'horizontale, V pour placer le bateau a la verticale",b->nom,b->vieBateau);
+                printf("Pour arrete la partie et sauvegarder ecrivé : Sauvegarde\n");
+
                 scanf("%s", coordonnee);
-                c_bateau = caracToCdn(coordonnee);
-                printf("%d",c_bateau->y);
-                printf("%d", c_bateau->x);
+            
+                if (strcmp(coordonnee, "Sauvegarde")==0)
+                {
+                    SaveGrille(joueur1->grille, "grilleJ1.txt");
+                    SaveGrille(joueur1->grille, "grilleJ2.txt");
+                    exit(0);
+                }
+            
+                else
+                {
+                    c_bateau = caracToCdn(coordonnee);
+                    
+                }
             }
             else
             {
@@ -210,7 +222,7 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
                 {
                     for (i = c_bateau->x; i < b->vieBateau + c_bateau->x; i++)
                     {
-                        if (g->grille[i][c_bateau->y] != eau)
+                        if (joueur1->grille[i][c_bateau->y] != eau)
                         {
                             if (JouB == 0)
                             {
@@ -235,7 +247,7 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
             {
                 for (i = c_bateau->y; i < c_bateau->y + b->vieBateau; i++)
                 {
-                    if (g->grille[c_bateau->x][i] != eau)
+                    if (joueur1->grille[c_bateau->x][i] != eau)
                     {
                         if (JouB == 0)
                         {
@@ -256,18 +268,18 @@ Grille_j *placerBateau(Grille_j *g, Bateau *b, int JouB)
         {
             for (i = c_bateau->x; i < c_bateau->x + b->vieBateau; i++)
             {
-                g->grille[i][c_bateau->y] = b->idBateau;
+                joueur1->grille[i][c_bateau->y] = b->idBateau;
             }
         }
         else
         {
             for (i = c_bateau->y; i < c_bateau->y + b->vieBateau; i++)
             {
-                g->grille[c_bateau->x][i] = b->idBateau;
+                joueur1->grille[c_bateau->x][i] = b->idBateau;
             }
         }
         free(c_bateau);
-        return g;
+        return joueur1;
     }
 
 //ici on cree la fonction tire qui va tirer sur la grille ennemie le but etant de montrer sur la grille si un bateau a ete touche,
@@ -281,18 +293,33 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB,int difficulter,int Rec
     Coordonnees *tire = NULL;
     tire = (Coordonnees *)malloc(sizeof(Coordonnees));
     int idcase;
-    char c_tire[4];
- 
+    char *c_tire=NULL;
+    c_tire=(char*)malloc(13*sizeof(char));
+
+
     while (touche==false)
     {
 
         if (JouB == 0)
         {
-            printf("Coordonnées du tire : \n");
+            printf("Donnez la coordonnées du tire \nCoordonnées a écriré sous la forme H6\n");
+            printf("Pour arrete la partie et sauvegarder ecrire : Sauvegarde\n");
             scanf("%s", c_tire);
-            tire = caracToCdn(c_tire);
+            if (strcmp(c_tire, "Sauvegarde")==0)
+            {
+                SaveGrille(joueur1->grille, "grilleJ1.txt");
+                SaveGrille(joueur1->grilleTire, "grilleTireJ1.txt");
+                SaveGrille(joueur2->grille, "grilleJ2.txt");
+                SaveGrille(joueur2->grille, "grilleTireJ2.txt");
+                exit(0);
+            }
+            else
+            {
+                tire = caracToCdn(c_tire);
+            }
+            
         }
-        if (RecupC == 1&&JouB==0){
+        if (RecupC == 1&&JouB==1){
             fichier = fopen("coordonnee.txt", "r");
 
             fscanf(fichier, "%d%d", &tire->x, &tire->y);
@@ -319,15 +346,15 @@ int attaque(Grille_j *joueur1,Grille_j *joueur2,int JouB,int difficulter,int Rec
             fclose(fichier);
         }
         
-        else
+        if(JouB==1)
         {
             tire->x = generer_borne(10);
             tire->y = generer_borne(10);
         }
-
+        
+            
+        
     idcase = joueur2->grille[tire->x][tire->y];
-
-  
     if(idcase == eau || idcase==eau_touche)
     {
     
